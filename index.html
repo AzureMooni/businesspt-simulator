@@ -7,17 +7,17 @@
     <!-- Tailwind CSS (CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 첨부해주신 배경 이미지 적용 */
+        /* 첨부 이미지 배경 고정 */
         body {
             background: url('./시뮬레이터 배경.png') no-repeat center center fixed;
             background-size: cover;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
-        /* 어두운 오버레이로 글자 가독성 확보 */
+        /* 어두운 오버레이 레이어 */
         .bg-overlay {
             background: rgba(0, 0, 0, 0.45);
         }
-        /* 카드 반투명 글래스모피즘 효과 */
+        /* 카드 글래스모피즘 효과 */
         .glass-card {
             background: rgba(18, 18, 18, 0.82);
             backdrop-filter: blur(12px);
@@ -27,10 +27,10 @@
 </head>
 <body class="h-screen w-screen flex flex-col justify-between items-center text-white p-6 relative overflow-hidden bg-overlay">
 
-    <!-- 상단 헤더 (로고 및 재설정) -->
+    <!-- 상단 헤더 -->
     <header class="w-full max-w-4xl flex justify-between items-center z-10">
         <h1 class="text-2xl font-extrabold tracking-wider text-red-500 uppercase flex items-center gap-2">
-            <span class="inline-block w-3 h-3 bg-red-600 rounded-full animate-ping"></span>
+            <span id="recordingIndicator" class="inline-block w-3 h-3 bg-gray-500 rounded-full"></span>
             BUSINESS PT SIMULATOR
         </h1>
         <button onclick="drawNewSimulation()" class="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-md border border-white/20 transition">
@@ -38,7 +38,7 @@
         </button>
     </header>
 
-    <!-- 메인 시뮬레이션 정보 카드 (화면 중앙 위치) -->
+    <!-- 메인 시뮬레이션 정보 카드 -->
     <main class="w-full max-w-3xl glass-card rounded-2xl p-8 shadow-2xl z-10 my-auto text-center border-t-2 border-t-red-500">
         
         <!-- 주차 및 세부 항목 -->
@@ -63,33 +63,46 @@
             </p>
         </div>
 
-        <!-- 타이머 및 컨트롤 영역 -->
+        <!-- 타이머 및 컨트롤 버튼 영역 -->
         <div class="mt-8 flex flex-col items-center justify-center">
             
-            <!-- 3분 카운트다운 타이머 -->
+            <!-- 스톱워치 타이머 (00:00부터 카운트업) -->
             <div id="timer" class="text-6xl md:text-7xl font-black font-mono tracking-wider text-white mb-6">
-                03:00
+                00:00
             </div>
 
-            <!-- 컨트롤 버튼 -->
-            <button id="startBtn" onclick="toggleSimulation()" class="bg-red-600 hover:bg-red-700 text-white font-bold text-xl px-12 py-4 rounded-xl shadow-lg transform active:scale-95 transition-all flex items-center gap-3">
-                <span>▶ START (녹음 시작)</span>
-            </button>
+            <!-- 컨트롤 버튼 그룹 (시작 / 일시정지 / 정지) -->
+            <div class="flex items-center gap-4">
+                <!-- 시작 버튼 -->
+                <button id="startBtn" onclick="startSimulation()" class="bg-red-600 hover:bg-red-700 text-white font-bold text-lg px-8 py-3.5 rounded-xl shadow-lg transform active:scale-95 transition-all flex items-center gap-2">
+                    ▶ 시작
+                </button>
+                
+                <!-- 일시정지 버튼 -->
+                <button id="pauseBtn" onclick="pauseSimulation()" disabled class="bg-gray-600 opacity-50 cursor-not-allowed text-white font-bold text-lg px-8 py-3.5 rounded-xl shadow-lg transform active:scale-95 transition-all flex items-center gap-2">
+                    ⏸ 일시정지
+                </button>
+
+                <!-- 정지 버튼 -->
+                <button id="stopBtn" onclick="stopSimulation()" disabled class="bg-gray-600 opacity-50 cursor-not-allowed text-white font-bold text-lg px-8 py-3.5 rounded-xl shadow-lg transform active:scale-95 transition-all flex items-center gap-2">
+                    ⏹ 정지
+                </button>
+            </div>
             
-            <p id="statusMsg" class="text-xs text-gray-400 mt-3 h-4">
-                시작 버튼을 누르면 3분 타이머와 음성 녹음이 시작됩니다.
+            <p id="statusMsg" class="text-xs text-gray-400 mt-4 h-4">
+                '시작' 버튼을 누르면 타이머 측정 및 마이크 녹음이 시작됩니다.
             </p>
         </div>
     </main>
 
-    <!-- 하단 오디오 재생 안내 -->
+    <!-- 하단 푸터 -->
     <footer class="z-10 text-xs text-gray-400 text-center">
-        © Business PT. 3분이 지나면 자동 종료 및 마이크 녹음 파일(WebM/MP3)이 다운로드됩니다.
+        © Business PT. '정지'를 누르면 "여기까지 하겠습니다. 수고하셨습니다." 안내 후 녹음 파일(WebM)이 다운로드됩니다.
     </footer>
 
-    <!-- 자바스크립트 스크립트 로직 -->
+    <!-- 자바스크립트 로직 -->
     <script>
-        // 1. 주차 및 항목 데이터 세팅
+        // 주차 및 세부 항목 데이터
         const mandatoryTasks = [
             { week: "0주차 🔥[필수]", title: "1. 지원동기 및 목표 물어보기 / 강의 후기, 각오, 설문기반 대화" }
         ];
@@ -109,7 +122,7 @@
             { week: "4주차", title: "3. 채널 주제 정하기" }
         ];
 
-        // 무작위 페르소나 데이터 세트
+        // 무작위 페르소나 데이터
         const personas = [
             "40대 제조업 대표. 공장 폐수 처리 B2B 필터 판매 희망. 유튜브 효과성에 의심이 많음.",
             "30대 수제 피자집 자영업자. 인근 경쟁 심화로 지역 명소 유입용 브랜드 밸류 상승 희망.",
@@ -124,21 +137,19 @@
         // 상태 변수
         let currentTask = {};
         let isRunning = false;
+        let isPaused = false;
         let timerInterval = null;
-        let timeLeft = 180; // 3분 = 180초
+        let elapsedTime = 0; // 초 단위 카운트업
         
-        // 오디오 녹음 관련 변수
+        // 오디오 녹음 관련
         let mediaRecorder = null;
         let audioChunks = [];
 
-        // 무작위 시뮬레이션 세팅
+        // 무작위 항목 뽑기
         function drawNewSimulation() {
-            if(isRunning) return;
+            if (isRunning) return;
 
-            // 필수(0주차 1번) 또는 택1 항목 조합
-            // 무작위로 필수 1번이 나올 수도 있고 택1 항목이 나올 수도 있게 세팅
-            const isMandatory = Math.random() < 0.3; // 30% 확률로 필수 0주차 1번 노출
-            
+            const isMandatory = Math.random() < 0.3; // 30% 확률로 필수 0주차 1번
             if (isMandatory) {
                 currentTask = mandatoryTasks[0];
             } else {
@@ -154,79 +165,133 @@
             resetTimer();
         }
 
-        // 타이머 리셋
+        // 타이머 및 상태 초기화
         function resetTimer() {
             clearInterval(timerInterval);
-            timeLeft = 180;
-            updateTimerDisplay();
-            document.getElementById('statusMsg').innerText = "시작 버튼을 누르면 3분 타이머와 음성 녹음이 시작됩니다.";
-            document.getElementById('startBtn').innerHTML = "<span>▶ START (녹음 시작)</span>";
-            document.getElementById('startBtn').className = "bg-red-600 hover:bg-red-700 text-white font-bold text-xl px-12 py-4 rounded-xl shadow-lg transform active:scale-95 transition-all flex items-center gap-3";
+            elapsedTime = 0;
             isRunning = false;
+            isPaused = false;
+            updateTimerDisplay();
+            setControlState('initial');
+            document.getElementById('statusMsg').innerText = "'시작' 버튼을 누르면 타이머 측정 및 마이크 녹음이 시작됩니다.";
         }
 
         function updateTimerDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
+            const minutes = Math.floor(elapsedTime / 60);
+            const seconds = elapsedTime % 60;
             document.getElementById('timer').innerText = 
                 `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         }
 
-        // 시뮬레이션 토글 (시작 / 중단)
-        async function toggleSimulation() {
-            if (!isRunning) {
-                // 마이크 권한 요청 및 녹음 시작
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    mediaRecorder = new MediaRecorder(stream);
-                    audioChunks = [];
+        // 버튼 활성화/비활성화 제어
+        function setControlState(state) {
+            const startBtn = document.getElementById('startBtn');
+            const pauseBtn = document.getElementById('pauseBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            const indicator = document.getElementById('recordingIndicator');
 
-                    mediaRecorder.ondataavailable = event => {
-                        audioChunks.push(event.data);
-                    };
+            if (state === 'running') {
+                startBtn.disabled = true;
+                startBtn.className = "bg-gray-600 opacity-50 cursor-not-allowed text-white font-bold text-lg px-8 py-3.5 rounded-xl shadow-lg";
+                
+                pauseBtn.disabled = false;
+                pauseBtn.className = "bg-amber-600 hover:bg-amber-700 text-white font-bold text-lg px-8 py-3.5 rounded-xl shadow-lg transform active:scale-95 transition-all";
+                pauseBtn.innerText = "⏸ 일시정지";
 
-                    mediaRecorder.onstop = saveAudioFile;
-                    mediaRecorder.start();
+                stopBtn.disabled = false;
+                stopBtn.className = "bg-red-600 hover:bg-red-700 text-white font-bold text-lg px-8 py-3.5 rounded-xl shadow-lg transform active:scale-95 transition-all";
 
-                    // 타이머 동작 시작
-                    isRunning = true;
-                    document.getElementById('startBtn').innerHTML = "<span>⏹ STOP (즉시 종료)</span>";
-                    document.getElementById('startBtn').className = "bg-gray-600 hover:bg-gray-700 text-white font-bold text-xl px-12 py-4 rounded-xl shadow-lg transform active:scale-95 transition-all flex items-center gap-3";
-                    document.getElementById('statusMsg').innerText = "🎙️ 녹음 중... 3분간 발표를 진행하세요.";
+                indicator.className = "inline-block w-3 h-3 bg-red-600 rounded-full animate-ping";
+            } else if (state === 'paused') {
+                pauseBtn.innerText = "▶ 재개";
+                indicator.className = "inline-block w-3 h-3 bg-amber-500 rounded-full";
+            } else { // initial or stopped
+                startBtn.disabled = false;
+                startBtn.className = "bg-red-600 hover:bg-red-700 text-white font-bold text-lg px-8 py-3.5 rounded-xl shadow-lg transform active:scale-95 transition-all";
 
-                    timerInterval = setInterval(() => {
-                        timeLeft--;
-                        updateTimerDisplay();
+                pauseBtn.disabled = true;
+                pauseBtn.className = "bg-gray-600 opacity-50 cursor-not-allowed text-white font-bold text-lg px-8 py-3.5 rounded-xl shadow-lg";
+                pauseBtn.innerText = "⏸ 일시정지";
 
-                        if (timeLeft <= 0) {
-                            finishSimulation();
-                        }
-                    }, 1000);
+                stopBtn.disabled = true;
+                stopBtn.className = "bg-gray-600 opacity-50 cursor-not-allowed text-white font-bold text-lg px-8 py-3.5 rounded-xl shadow-lg";
 
-                } catch (err) {
-                    alert("마이크 접근 권한이 필요합니다. 마이크 연결 및 권한을 확인해주세요.");
-                }
-            } else {
-                finishSimulation();
+                indicator.className = "inline-block w-3 h-3 bg-gray-500 rounded-full";
             }
         }
 
-        // 시뮬레이션 종료
-        function finishSimulation() {
+        // [시작] 버튼 동작
+        async function startSimulation() {
+            if (isRunning) return;
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
+                mediaRecorder.onstop = saveAudioFile;
+                mediaRecorder.start();
+
+                isRunning = true;
+                isPaused = false;
+                setControlState('running');
+                document.getElementById('statusMsg').innerText = "🎙️ 녹음 및 진행 시간 측정 중입니다...";
+
+                timerInterval = setInterval(() => {
+                    elapsedTime++;
+                    updateTimerDisplay();
+                }, 1000);
+
+            } catch (err) {
+                alert("마이크 접근 권한이 필요합니다. 마이크 허용 후 다시 시도해 주세요.");
+            }
+        }
+
+        // [일시정지 / 재개] 버튼 동작
+        function pauseSimulation() {
+            if (!isRunning) return;
+
+            if (!isPaused) {
+                // 일시정지 처리
+                clearInterval(timerInterval);
+                if (mediaRecorder && mediaRecorder.state === "recording") {
+                    mediaRecorder.pause();
+                }
+                isPaused = true;
+                setControlState('paused');
+                document.getElementById('statusMsg').innerText = "⏸ 타이머 및 녹음이 일시정지되었습니다.";
+            } else {
+                // 재개 처리
+                timerInterval = setInterval(() => {
+                    elapsedTime++;
+                    updateTimerDisplay();
+                }, 1000);
+                if (mediaRecorder && mediaRecorder.state === "paused") {
+                    mediaRecorder.resume();
+                }
+                isPaused = false;
+                setControlState('running');
+                document.getElementById('statusMsg').innerText = "🎙️ 녹음 및 진행 시간 측정 중입니다...";
+            }
+        }
+
+        // [정지] 버튼 동작
+        function stopSimulation() {
+            if (!isRunning) return;
+
             clearInterval(timerInterval);
             isRunning = false;
 
-            // 녹음 중지
             if (mediaRecorder && mediaRecorder.state !== "inactive") {
                 mediaRecorder.stop();
             }
 
-            // 음성 안내 멘트 출력 (TTS)
+            // 음성 안내 출력 (TTS)
             speakText("여기까지 하겠습니다. 수고하셨습니다.");
 
+            setControlState('stopped');
             document.getElementById('statusMsg').innerText = "✅ 시뮬레이션이 종료되었습니다. 녹음 파일이 다운로드됩니다.";
-            document.getElementById('startBtn').innerHTML = "<span>🔄 다시 시작</span>";
-            document.getElementById('startBtn').onclick = () => location.reload();
         }
 
         // 음성합성 (TTS)
@@ -239,14 +304,13 @@
             }
         }
 
-        // 오디오 파일 자동 다운로드 저장 (파일명: 주차_항목이름.webm/mp3)
+        // 오디오 파일 자동 다운로드 (파일명: 주차_항목이름.webm)
         function saveAudioFile() {
             const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
             const audioUrl = URL.createObjectURL(audioBlob);
             const a = document.createElement('a');
             a.href = audioUrl;
             
-            // 파일명 특수문자 정제
             const cleanTitle = currentTask.title.replace(/[/\\?%*:|"<>]/g, '_');
             a.download = `${currentTask.week}_${cleanTitle}.webm`;
             document.body.appendChild(a);
@@ -254,7 +318,7 @@
             document.body.removeChild(a);
         }
 
-        // 초기 실행
+        // 페이지 로드 시 초기 뽑기
         window.onload = drawNewSimulation;
     </script>
 </body>
