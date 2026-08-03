@@ -7,25 +7,56 @@
     <!-- Tailwind CSS (CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 첨부 이미지 배경 고정 */
+        /* 배경 설정 (비디오 대체 대비용 배경색) */
         body {
-            background: url('./시뮬레이터 배경.png') no-repeat center center fixed;
-            background-size: cover;
+            background-color: #121212;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        /* 배경 비디오 스타일 */
+        .video-background {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: 0;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
         }
         /* 어두운 오버레이 레이어 */
         .bg-overlay {
-            background: rgba(0, 0, 0, 0.45);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 1;
+        }
+        /* 콘텐츠가 비디오 위에 오도록 설정 */
+        .content-layer {
+            position: relative;
+            z-index: 2;
         }
         /* 카드 글래스모피즘 효과 */
         .glass-card {
-            background: rgba(18, 18, 18, 0.82);
+            background: rgba(18, 18, 18, 0.85);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.15);
         }
     </style>
 </head>
-<body class="h-screen w-screen flex flex-col justify-between items-center text-white p-6 relative overflow-hidden bg-overlay">
+<body class="h-screen w-screen flex flex-col justify-between items-center text-white p-6 relative overflow-hidden">
+
+    <!-- 배경 비디오 (무한 반복, 음소거, 자동 재생) -->
+    <video autoplay loop muted playsinline class="video-background">
+        <source src="./이미지에_있는_모든_사람들이_화면_앞에_있는_나를_바라.mp4" type="video/mp4">
+    </video>
+
+    <!-- 어두운 오버레이 레이어 -->
+    <div class="bg-overlay"></div>
 
     <!-- 상단 헤더 -->
     <header class="w-full max-w-4xl flex justify-between items-center z-10">
