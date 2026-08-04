@@ -74,7 +74,7 @@
             <select id="bgSelect" onchange="changeBackground()" class="text-xs bg-black/40 text-white border border-white/20 px-2.5 py-1.5 rounded-md outline-none cursor-pointer hover:bg-white/20 transition">
                 <option value="none" class="bg-neutral-900 text-white">⚫ 배경 없음 (검은 화면)</option>
                 <option value="camera" class="bg-neutral-900 text-white">📷 내 카메라 (거울 모드)</option>
-                <option value="video" class="bg-neutral-900 text-white">👥 나를 바라보는 사람들 (비디오)</option>
+                <option value="video" class="bg-neutral-900 text-white">👥 실전 시뮬레이션 (비디오)</option>
             </select>
 
             <button onclick="drawNewSimulation()" class="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-md border border-white/20 transition">
@@ -427,7 +427,11 @@
             if (selectValue === 'video') {
                 bgVideo.style.display = 'block';
                 bgOverlay.style.display = 'block';
-                bgVideo.play().catch(() => {});
+                // 비디오를 다시 로드하고 재생하여 렌더링이 바로 시작되도록 조치
+                bgVideo.load();
+                bgVideo.play().catch(err => {
+                    console.log("비디오 재생 오류:", err);
+                });
             } else if (selectValue === 'camera') {
                 try {
                     cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
