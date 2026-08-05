@@ -43,11 +43,18 @@
             z-index: 1;
             display: none; /* 기본 숨김 */
         }
-        /* 카드 글래스모피즘 효과 */
+        /* 카드 글래스모피즘 효과 (투명도를 약간 올려 뒤의 배경이 더 보이게 조정) */
         .glass-card {
-            background: rgba(18, 18, 18, 0.85);
-            backdrop-filter: blur(12px);
+            background: rgba(18, 18, 18, 0.65);
+            backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        /* 카드 숨김 상태 스타일 */
+        .card-hidden {
+            opacity: 0 !important;
+            pointer-events: none;
+            transform: scale(0.95);
         }
     </style>
 </head>
@@ -72,6 +79,12 @@
         </h1>
         
         <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 w-full sm:w-auto">
+            <!-- 정보창 켜기/끄기 체크박스 옵션 -->
+            <label class="flex items-center gap-2 text-xs bg-white/10 hover:bg-white/20 px-2.5 py-1.5 rounded-md border border-white/20 cursor-pointer select-none transition">
+                <input type="checkbox" id="toggleCardCheckbox" checked onchange="toggleCardVisibility()" class="w-3.5 h-3.5 accent-red-600 cursor-pointer">
+                <span>카드 보이기</span>
+            </label>
+
             <!-- 배경화면 선택 셀렉트 박스 -->
             <select id="bgSelect" onchange="changeBackground()" class="text-xs bg-black/40 text-white border border-white/20 px-2.5 py-1.5 rounded-md outline-none cursor-pointer hover:bg-white/20 transition">
                 <option value="none" class="bg-neutral-900 text-white">⚫ 배경 없음 (검은 화면)</option>
@@ -86,7 +99,7 @@
     </header>
 
     <!-- 메인 시뮬레이션 정보 카드 -->
-    <main class="w-full max-w-3xl glass-card rounded-2xl p-5 md:p-8 shadow-2xl z-10 my-auto text-center border-t-2 border-t-red-500">
+    <main id="mainCard" class="w-full max-w-3xl glass-card rounded-2xl p-5 md:p-8 shadow-2xl z-10 my-auto text-center border-t-2 border-t-red-500">
         
         <!-- 주차 및 세부 항목 -->
         <div class="mb-4 md:mb-6">
@@ -542,6 +555,17 @@
                 }
             } else {
                 // 'none' 일 때 (검은 화면) - 추가 조치 없음
+            }
+        }
+
+        // 메인 정보 카드 토글 켜기/끄기 기능
+        function toggleCardVisibility() {
+            const isChecked = document.getElementById('toggleCardCheckbox').checked;
+            const mainCard = document.getElementById('mainCard');
+            if (isChecked) {
+                mainCard.classList.remove('card-hidden');
+            } else {
+                mainCard.classList.add('card-hidden');
             }
         }
 
