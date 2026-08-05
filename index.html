@@ -155,6 +155,22 @@
             </p>
         </div>
 
+        <!-- 📊 음성 데시벨 파형 & 실시간 미터 컴포넌트 -->
+        <div class="w-full bg-black/60 rounded-xl p-4 border border-white/10 mt-5 mb-2 text-left">
+            <div class="flex justify-between items-center mb-2 text-xs font-semibold">
+                <span class="text-gray-400 flex items-center gap-1">📊 음성 데시벨 파형 (Waveform)</span>
+                <span id="dbValueText" class="text-amber-400 font-mono">🔊 실시간: -60 dB</span>
+            </div>
+            
+            <!-- Audio Waveform Canvas -->
+            <canvas id="waveformCanvas" class="w-full h-24 bg-black/80 rounded-lg border border-white/5 block"></canvas>
+            
+            <!-- Live Volume Meter Bar -->
+            <div class="w-full bg-gray-800 h-2 rounded-full mt-3 overflow-hidden">
+                <div id="volumeBar" class="bg-gradient-to-r from-emerald-500 via-amber-500 to-red-500 h-full w-0 transition-all duration-75"></div>
+            </div>
+        </div>
+
         <!-- 타이머 및 컨트롤 버튼 영역 -->
         <div class="mt-6 md:mt-8 flex flex-col items-center justify-center">
             
@@ -477,9 +493,13 @@
         let objectionTriggerTime = 0; // 돌발상황 발동 예정 시간 (초)
         let isObjectionTriggered = false; // 발동 여부 플래그
         
-        // 오디오 녹음 관련
+        // 오디오 녹음 및 분석 관련
         let mediaRecorder = null;
         let audioChunks = [];
+        let audioCtx = null;
+        let analyser = null;
+        let animFrameId = null;
+        let volumeHistory = []; // 데시벨/볼륨 히스토리 파형 데이터 배열
 
         // 무작위 항목 뽑기
         function drawNewSimulation() {
@@ -527,13 +547,26 @@
         // 타이머 및 상태 초기화
         function resetTimer() {
             clearInterval(timerInterval);
+            if (animFrameId) {
+                cancelAnimationFrame(animFrameId);
+                animFrameId = null;
+            }
+            if (audioCtx && audioCtx.state !== 'closed') {
+                audioCtx.close().catch(() => {});
+                audioCtx = null;
+            }
             elapsedTime = 0;
             isRunning = false;
             isPaused = false;
             recordedAudioBlob = null;
             isObjectionTriggered = false; // 초기화
+            volumeHistory = [];
+
             updateTimerDisplay();
             setControlState('initial');
+            clearWaveformCanvas();
+            document.getElementById('dbValueText').innerText = "🔊 실시간: -60 dB";
+            document.getElementById('volumeBar').style.width = "0%";
             document.getElementById('statusMsg').innerText = "'시작' 버튼을 누르면 타이머 측정 및 마이크 녹음이 시작됩니다.";
         }
 
@@ -542,6 +575,27 @@
             const seconds = elapsedTime % 60;
             document.getElementById('timer').innerText = 
                 `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // 캔버스 초기화
+        function clearWaveformCanvas() {
+            const canvas = document.getElementById('waveformCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            // DPR 대응 캔버스 해상도 맞춤
+            canvas.width = canvas.clientWidth * window.devicePixelRatio || 300;
+            canvas.height = canvas.clientHeight * window.devicePixelRatio || 96;
+
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 중앙 가이드 라인
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height / 2);
+            ctx.lineTo(canvas.width, canvas.height / 2);
+            ctx.stroke();
         }
 
         // 버튼 활성화/비활성화 제어
@@ -623,9 +677,17 @@
 
                 mediaRecorder.start();
 
+                // Web Audio API 분석 노드 연결
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const source = audioCtx.createMediaStreamSource(stream);
+                analyser = audioCtx.createAnalyser();
+                analyser.fftSize = 512;
+                source.connect(analyser);
+
                 isRunning = true;
                 isPaused = false;
                 isObjectionTriggered = false;
+                volumeHistory = [];
 
                 // 🚨 시작 시 20초 ~ 40초 사이 무작위 돌발시간 예약
                 objectionTriggerTime = Math.floor(Math.random() * 21) + 20; 
@@ -645,53 +707,107 @@
                     }
                 }, 1000);
 
+                // 루프 시작: 데시벨 미터 & 실시간 파형 그리기
+                visualizeAudio();
+
             } catch (err) {
                 alert("마이크 접근 권한이 필요합니다. 마이크 허용 후 다시 시도해 주세요.");
             }
         }
 
-        // 🚨 돌발 팝업 발동 함수
-        function triggerObjectionModal() {
-            isObjectionTriggered = true;
+        // 실시간 음성 데시벨 및 파형 시각화 루프
+        function visualizeAudio() {
+            if (!analyser || !isRunning) return;
 
-            // 해당 항목의 돌발질문 중 하나 무작위 추출
-            const selectedObjection = currentTask.objections[Math.floor(Math.random() * currentTask.objections.length)];
-            document.getElementById('modalObjectionText').innerText = `"${selectedObjection}"`;
+            const bufferLength = analyser.fftSize;
+            const dataArray = new Uint8Array(bufferLength);
 
-            // 팝업 출현
-            document.getElementById('objectionModal').classList.remove('hidden');
+            function draw() {
+                if (!isRunning) return;
+                
+                if (isPaused) {
+                    animFrameId = requestAnimationFrame(draw);
+                    return;
+                }
 
-            // 긴급 사이렌 경고음 재생 (Web Audio API)
-            playWarningBeep();
-        }
+                analyser.getByteTimeDomainData(dataArray);
 
-        // 팝업 닫기
-        function closeObjectionModal() {
-            document.getElementById('objectionModal').classList.add('hidden');
-        }
+                // 1. RMS (Root Mean Square) 계산 및 dB 구하기
+                let sumSquares = 0;
+                for (let i = 0; i < bufferLength; i++) {
+                    const norm = (dataArray[i] - 128) / 128;
+                    sumSquares += norm * norm;
+                }
+                const rms = Math.sqrt(sumSquares / bufferLength);
+                
+                // dB 계산 (20 * log10(rms)), 최소 -60 dB 제한
+                let db = rms > 0.0001 ? 20 * Math.log10(rms) : -60;
+                db = Math.max(-60, Math.min(0, db));
 
-        // 긴급 비프음 효과음 생성기 (외부 오디오 파일 없이 동작)
-        function playWarningBeep() {
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
+                // 2. 볼륨 미터 바 (0% ~ 100%)
+                const volumePercent = Math.min(100, Math.max(0, ((db + 60) / 60) * 100));
+                document.getElementById('volumeBar').style.width = `${volumePercent}%`;
+                document.getElementById('dbValueText').innerText = `🔊 실시간: ${Math.round(db)} dB`;
 
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5 톤
-                osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.4);
+                // 파형 데이터 저장 (RMS 기반 볼륨 수치)
+                volumeHistory.push({ db: db, norm: rms });
 
-                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                // 3. Canvas 파형 그리기 (좌 -> 우로 흐르는 실시간 파형)
+                const canvas = document.getElementById('waveformCanvas');
+                if (canvas) {
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = canvas.clientWidth * window.devicePixelRatio || 300;
+                    canvas.height = canvas.clientHeight * window.devicePixelRatio || 96;
 
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
+                    ctx.fillStyle = '#0a0a0a';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.4);
-            } catch(e) {
-                console.log("Audio not allowed before interaction");
+                    // 그리드 선
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(0, canvas.height / 2);
+                    ctx.lineTo(canvas.width, canvas.height / 2);
+                    ctx.stroke();
+
+                    // 수집된 실시간 volumeHistory로 파형 선 그리기
+                    ctx.lineWidth = 2 * (window.devicePixelRatio || 1);
+                    ctx.strokeStyle = '#f59e0b'; // amber-500
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = 'rgba(245, 158, 11, 0.5)';
+                    ctx.beginPath();
+
+                    const maxPoints = Math.max(volumeHistory.length, 100);
+                    const sliceWidth = canvas.width / (maxPoints - 1);
+
+                    for (let i = 0; i < volumeHistory.length; i++) {
+                        const x = i * sliceWidth;
+                        const amplitude = volumeHistory[i].norm * (canvas.height / 2) * 0.9;
+                        const y = (canvas.height / 2) - amplitude;
+
+                        if (i === 0) {
+                            ctx.moveTo(x, y);
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
+                    }
+
+                    // 대칭 아랫선 그리기
+                    for (let i = volumeHistory.length - 1; i >= 0; i--) {
+                        const x = i * sliceWidth;
+                        const amplitude = volumeHistory[i].norm * (canvas.height / 2) * 0.9;
+                        const y = (canvas.height / 2) + amplitude;
+                        ctx.lineTo(x, y);
+                    }
+
+                    ctx.stroke();
+                    ctx.shadowBlur = 0; // 초기화
+                }
+
+                animFrameId = requestAnimationFrame(draw);
             }
+
+            draw();
         }
 
         // [일시정지 / 재개] 버튼 동작
@@ -729,15 +845,94 @@
             clearInterval(timerInterval);
             isRunning = false;
 
+            if (animFrameId) {
+                cancelAnimationFrame(animFrameId);
+                animFrameId = null;
+            }
+
             if (mediaRecorder && mediaRecorder.state !== "inactive") {
                 mediaRecorder.stop();
             }
+
+            if (audioCtx && audioCtx.state !== 'closed') {
+                audioCtx.close().catch(() => {});
+            }
+
+            // 정지 후 전체 섹션 녹음 파형 최종 그래프 그리기 & 평균 데시벨 산출
+            drawPostRecordingWaveform();
 
             // 음성 안내 출력 (TTS)
             speakText("여기까지 하겠습니다. 수고하셨습니다.");
 
             setControlState('stopped');
-            document.getElementById('statusMsg').innerText = "✅ 시뮬레이션이 종료되었습니다. 녹음 파일이 다운로드 가능합니다.";
+        }
+
+        // 녹음 종료 후 전체 섹션 최종 파형 그래프 재해석 그리기 & 평균 dB 계산
+        function drawPostRecordingWaveform() {
+            const canvas = document.getElementById('waveformCanvas');
+            if (!canvas || volumeHistory.length === 0) return;
+
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.clientWidth * window.devicePixelRatio || 300;
+            canvas.height = canvas.clientHeight * window.devicePixelRatio || 96;
+
+            ctx.fillStyle = '#0f172a'; // slate-900 배경
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 중앙선
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height / 2);
+            ctx.lineTo(canvas.width, canvas.height / 2);
+            ctx.stroke();
+
+            // 전체 세션 데이터의 평균 dB 및 최대 dB 산출
+            let validDbSum = 0;
+            let count = 0;
+            let maxDb = -60;
+
+            volumeHistory.forEach(item => {
+                if (item.db > -58) { // 배경 소음 제외 유효 음성만 산출
+                    validDbSum += item.db;
+                    count++;
+                }
+                if (item.db > maxDb) maxDb = item.db;
+            });
+
+            const avgDb = count > 0 ? Math.round(validDbSum / count) : -60;
+
+            // 전체 파형 라인 그리기
+            ctx.lineWidth = 2 * (window.devicePixelRatio || 1);
+            ctx.strokeStyle = '#10b981'; // emerald-500 (완료 상태 색상)
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.15)'; // 채우기 그라데이션용
+            ctx.beginPath();
+
+            const step = canvas.width / (volumeHistory.length - 1 || 1);
+
+            ctx.moveTo(0, canvas.height / 2);
+            for (let i = 0; i < volumeHistory.length; i++) {
+                const x = i * step;
+                const amplitude = volumeHistory[i].norm * (canvas.height / 2) * 0.95;
+                const y = (canvas.height / 2) - amplitude;
+                ctx.lineTo(x, y);
+            }
+
+            for (let i = volumeHistory.length - 1; i >= 0; i--) {
+                const x = i * step;
+                const amplitude = volumeHistory[i].norm * (canvas.height / 2) * 0.95;
+                const y = (canvas.height / 2) + amplitude;
+                ctx.lineTo(x, y);
+            }
+
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // 상태 텍스트에 평균 및 피크 데시벨 안내 업데이트
+            document.getElementById('dbValueText').innerText = `📊 평균: ${avgDb} dB (최고: ${Math.round(maxDb)} dB)`;
+            document.getElementById('volumeBar').style.width = "0%";
+            document.getElementById('statusMsg').innerText = `✅ 시뮬레이션 종료! [평균 음성 크기: ${avgDb} dB / 피크: ${Math.round(maxDb)} dB] 녹음 파일 다운로드가 가능합니다.`;
         }
 
         // 음성합성 (TTS)
