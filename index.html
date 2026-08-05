@@ -134,15 +134,7 @@
             </p>
         </div>
 
-        <!-- ⚡ 회원 돌발질문 (대처 필요) -->
-        <div class="bg-red-950/40 rounded-xl p-4 md:p-5 text-left border border-red-500/20 mt-3">
-            <div class="flex items-center gap-2 mb-2">
-                <span class="text-[10px] md:text-xs font-bold text-red-400 uppercase tracking-wider">⚡ 회원 돌발질문 (대처 필요)</span>
-            </div>
-            <p id="objectionDesc" class="text-sm md:text-lg font-medium text-red-200 leading-relaxed">
-                "나는 잘 모르겠고, 돈은 그냥 잘 벌고 싶다."
-            </p>
-        </div>
+        <!-- (돌발질문은 시뮬레이션 진행 중 팝업으로만 등장) -->
 
         <!-- 타이머 및 컨트롤 버튼 영역 -->
         <div class="mt-6 md:mt-8 flex flex-col items-center justify-center">
@@ -489,7 +481,6 @@
             document.getElementById('weekBadge').innerText = currentTask.week;
             document.getElementById('taskTitle').innerText = currentTask.title;
             document.getElementById('personaDesc').innerText = `"${selectedPersona}"`;
-            document.getElementById('objectionDesc').innerText = `"${selectedObjection}"`; // 돌발질문 세팅
             
             resetTimer();
         }
