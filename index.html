@@ -96,6 +96,14 @@
                 <span>UI 전체 보이기</span>
             </label>
 
+            <!-- 🚨 돌발질문 모드 셀렉트 박스 -->
+            <select id="objectionModeSelect" onchange="changeObjectionMode()" class="text-xs bg-black/40 text-white border border-red-500/40 px-2.5 py-1.5 rounded-md outline-none cursor-pointer hover:bg-white/20 transition">
+                <option value="popup" class="bg-neutral-900 text-white" selected>🚨 돌발질문: 팝업만 등장</option>
+                <option value="both" class="bg-neutral-900 text-white">⚡ 돌발질문: 카드표시+팝업</option>
+                <option value="card" class="bg-neutral-900 text-white">📋 돌발질문: 카드표시만</option>
+                <option value="off" class="bg-neutral-900 text-white">🚫 돌발질문: Off (안함)</option>
+            </select>
+
             <!-- 배경화면 선택 셀렉트 박스 -->
             <select id="bgSelect" onchange="changeBackground()" class="text-xs bg-black/40 text-white border border-white/20 px-2.5 py-1.5 rounded-md outline-none cursor-pointer hover:bg-white/20 transition">
                 <option value="none" class="bg-neutral-900 text-white">⚫ 배경 없음 (검은 화면)</option>
@@ -134,7 +142,15 @@
             </p>
         </div>
 
-        <!-- (돌발질문은 시뮬레이션 진행 중 팝업으로만 등장) -->
+        <!-- ⚡ 회원 돌발질문 (카드 옵션 선택 시 표시) -->
+        <div id="objectionBox" class="bg-red-950/40 rounded-xl p-4 md:p-5 text-left border border-red-500/20 mt-3 hidden">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="text-[10px] md:text-xs font-bold text-red-400 uppercase tracking-wider">⚡ 회원 돌발질문 (대처 필요)</span>
+            </div>
+            <p id="objectionDesc" class="text-sm md:text-lg font-medium text-red-200 leading-relaxed">
+                "나는 잘 모르겠고, 돈은 그냥 잘 벌고 싶다."
+            </p>
+        </div>
 
         <!-- 타이머 및 컨트롤 버튼 영역 -->
         <div class="mt-6 md:mt-8 flex flex-col items-center justify-center">
@@ -481,8 +497,28 @@
             document.getElementById('weekBadge').innerText = currentTask.week;
             document.getElementById('taskTitle').innerText = currentTask.title;
             document.getElementById('personaDesc').innerText = `"${selectedPersona}"`;
+            document.getElementById('objectionDesc').innerText = `"${selectedObjection}"`; // 돌발질문 세팅
+
+            // 선택한 돌발질문 모드 파악 (popup, both, card, off)
+            updateObjectionBoxVisibility();
             
             resetTimer();
+        }
+
+        // 돌발질문 모드 변경 시 카드 박스 가시성 실시간 업데이트
+        function changeObjectionMode() {
+            updateObjectionBoxVisibility();
+        }
+
+        function updateObjectionBoxVisibility() {
+            const objectionMode = document.getElementById('objectionModeSelect').value;
+            const objectionBox = document.getElementById('objectionBox');
+
+            if (objectionMode === 'both' || objectionMode === 'card') {
+                objectionBox.classList.remove('hidden');
+            } else {
+                objectionBox.classList.add('hidden');
+            }
         }
 
         // 타이머 및 상태 초기화
@@ -598,8 +634,10 @@
                     elapsedTime++;
                     updateTimerDisplay();
 
-                    // 🚨 예약된 시간에 팝업 발동!
-                    if (elapsedTime === objectionTriggerTime && !isObjectionTriggered) {
+                    const objectionMode = document.getElementById('objectionModeSelect').value;
+
+                    // 🚨 팝업이 포함된 모드 (popup, both)일 때만 예약 시간에 팝업 발동!
+                    if ((objectionMode === 'popup' || objectionMode === 'both') && elapsedTime === objectionTriggerTime && !isObjectionTriggered) {
                         triggerObjectionModal();
                     }
                 }, 1000);
