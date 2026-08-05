@@ -140,6 +140,16 @@
             </p>
         </div>
 
+        <!-- ⚡ 회원 돌발질문 (대처 필요) -->
+        <div class="bg-red-950/40 rounded-xl p-4 md:p-5 text-left border border-red-500/20 mt-3">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="text-[10px] md:text-xs font-bold text-red-400 uppercase tracking-wider">⚡ 회원 돌발질문 (대처 필요)</span>
+            </div>
+            <p id="objectionDesc" class="text-sm md:text-lg font-medium text-red-200 leading-relaxed">
+                "나는 잘 모르겠고, 돈은 그냥 잘 벌고 싶다."
+            </p>
+        </div>
+
         <!-- 타이머 및 컨트롤 버튼 영역 -->
         <div class="mt-6 md:mt-8 flex flex-col items-center justify-center">
             
@@ -184,24 +194,137 @@
 
     <!-- 자바스크립트 로직 -->
     <script>
-        // 주차 및 세부 항목 데이터
+        // 주차 및 세부 항목 데이터 (돌발질문 objections 리스트 매칭)
         const mandatoryTasks = [
-            { week: "0주차 🔥[필수]", title: "1. 지원동기 및 목표 물어보기 / 강의 후기, 각오, 설문기반 대화" }
+            { 
+                week: "0주차 🔥[필수]", 
+                title: "1. 지원동기 및 목표 물어보기 / 강의 후기, 각오, 설문기반 대화",
+                objections: [
+                    "나는 잘 모르겠고, 돈은 그냥 잘 벌고 싶어요.",
+                    "말도 안 되게 현실감 없는 목표(월 1억 등)를 달성하고 싶다고 해요.",
+                    "첫 달성 기준 50만 원이 매출인가요, 마진인가요?",
+                    "아예 직장이 없고 재능이 없는데 시작할 수 있나요?",
+                    "시간이 너무 없어요. (부산 등 너무 멀리서 왔어요)",
+                    "이미 유튜브 6년 했고 뷰트랩도 쓰고 있는데 또 들어야 하나요?",
+                    "눈으로 직접 확인하지 않으면 불신감이 커요. 조작 아닌가요?",
+                    "주PD님이 20년 걸린 걸 10달 만에 배우려면 어떤 마음이어야 하나요?"
+                ]
+            }
         ];
 
         const randomTasks = [
-            { week: "0주차", title: "2. 자기소개 영상 목적 설명 및 촬영" },
-            { week: "0주차", title: "3. 운영정책동의서 3, 4 항목" },
-            { week: "1주차", title: "1. 수익화 구조 적용 사례 보여주기 + 20문제 풀이" },
-            { week: "1주차", title: "2. 매출 목표에 맞는 트래픽 계산 + 수익화 구조 + 정량적 지표 설명" },
-            { week: "1주차", title: "3. 좋은 썸네일, 좋은 도입부 리뷰" },
-            { week: "2주차", title: "1. 컨텐츠 시장성 검증 + 아이템 시장성 검증 = 최종아이템 선정" },
-            { week: "3주차", title: "1. 키컨 예시 영상 보여주기 + 20문제 풀이" },
-            { week: "3주차", title: "2. 내 아이템 기특장 찾기 (챗지피티 교육생 준비)" },
-            { week: "3주차", title: "3. 키컨 썸네일 찾기 + 설득구조 (뷰트랩/실행시트)" },
-            { week: "4주차", title: "1. 풀링 예시 영상 보여주기" },
-            { week: "4주차", title: "2. 풀링 콘텐츠 썸네일 찾기" },
-            { week: "4주차", title: "3. 채널 주제 정하기" }
+            // --- 0주차 ---
+            { 
+                week: "0주차", 
+                title: "2. 자기소개 영상 목적 설명 및 촬영",
+                objections: [
+                    "기존 운영하던 유튜브 채널이 있는데도 자기소개 영상을 꼭 올려야 하나요?",
+                    "OT 안 봤는데 비즈니스 PT가 뭔지 잘 모르겠어요.",
+                    "얼굴 노출이나 자기소개 영상 촬영이 너무 부담스러워요."
+                ]
+            },
+            { 
+                week: "0주차", 
+                title: "3. 운영정책동의서 3, 4 항목",
+                objections: [
+                    "너무 바빠서 평소에 2~3시간씩 과제할 시간이 없는데요?",
+                    "다른 일이 생길 것 같은데 줌(비대면)이나 주말 몰아서 수강하면 안 되나요?",
+                    "비즈니스 PT 수강료가 너무 비싼 것 같은데 왜 이 가격인가요?",
+                    "2인 이상 동반 수강이나 타인 양도는 안 되나요?"
+                ]
+            },
+
+            // --- 1주차 ---
+            { 
+                week: "1주차", 
+                title: "1. 수익화 구조 적용 사례 보여주기 + 20문제 풀이",
+                objections: [
+                    "강의 내용 다 이해 가는데 굳이 문제 풀이까지 해야 하나요?",
+                    "나한테 실제로 사람들이 물건이나 서비스를 살까요?",
+                    "당장 다음 달부터 돈을 벌 수 있는 거 맞나요?"
+                ]
+            },
+            { 
+                week: "1주차", 
+                title: "2. 매출 목표에 맞는 트래픽 계산 + 수익화 구조 + 정량적 지표 설명",
+                objections: [
+                    "왜 이렇게 수치 계산(전환율, 모수)을 복잡하게 하나요?",
+                    "전환율만 나오면 무조건 목표 매출이 달성되나요?",
+                    "이미 인스타 30만 인플루언서인데 왜 유튜브 지표 계산을 해야 하죠?"
+                ]
+            },
+            { 
+                week: "1주차", 
+                title: "3. 좋은 썸네일, 좋은 도입부 리뷰",
+                objections: [
+                    "한번에 하면 되지 왜 풀링과 키 콘텐츠를 분리하나요?",
+                    "조회수 1만 회 따위 쉬울 것 같은데요?",
+                    "키 콘텐츠만 바로 만들면 안 되나요?"
+                ]
+            },
+
+            // --- 2주차 ---
+            { 
+                week: "2주차", 
+                title: "1. 컨텐츠 시장성 검증 + 아이템 시장성 검증 = 최종아이템 선정",
+                objections: [
+                    "기여도와 성과도의 차이가 정확히 뭔가요?",
+                    "아이템을 트레이너님이 직접 정해주시면 안 되나요?",
+                    "영양제 같은 상품은 상위 카테고리로 안 가고 막 다뤄도 되나요?"
+                ]
+            },
+
+            // --- 3주차 ---
+            { 
+                week: "3주차", 
+                title: "1. 키컨 예시 영상 보여주기 + 20문제 풀이",
+                objections: [
+                    "키 콘텐츠 예시 영상이 제 분야와 너무 달라서 감이 안 와요.",
+                    "문제를 다 풀었는데도 여전히 확신이 안 서요."
+                ]
+            },
+            { 
+                week: "3주차", 
+                title: "2. 내 아이템 기특장 찾기 (챗지피티 교육생 준비)",
+                objections: [
+                    "챗지피티/AI로 대본과 아이템 다 만들면 되는 거 아닌가요?",
+                    "제 아이템은 특별한 장점(기특장)이 없는 것 같아요."
+                ]
+            },
+            { 
+                week: "3주차", 
+                title: "3. 키컨 썸네일 찾기 + 설득구조 (뷰트랩/실행시트)",
+                objections: [
+                    "트레이너님이 썸네일 그냥 골라주시면 안 되나요?",
+                    "썸끝 원끝을 왜 이렇게까지 열심히 해야 하는지 모르겠어요."
+                ]
+            },
+
+            // --- 4주차 ---
+            { 
+                week: "4주차", 
+                title: "1. 풀링 예시 영상 보여주기",
+                objections: [
+                    "다른 예시 영상 더 볼 수 있는 거 없나요?",
+                    "편집이 너무 어려운데 편집도 트레이너님이 다 가르쳐주나요?"
+                ]
+            },
+            { 
+                week: "4주차", 
+                title: "2. 풀링 콘텐츠 썸네일 찾기",
+                objections: [
+                    "지금이라도 아이템 바꾸고 싶은데 괜찮을까요?",
+                    "해당 주제로 대중의 어그로를 끌 자신이 없어요."
+                ]
+            },
+            { 
+                week: "4주차", 
+                title: "3. 채널 주제 정하기",
+                objections: [
+                    "채널 주제를 하나로 고정하면 아이디어가 고갈될 것 같아요.",
+                    "이미 20만 유튜버인데 채널 주제를 새로 잡아야 하나요?"
+                ]
+            }
         ];
 
         // 무작위 페르소나 데이터 (총 100개 이상의 다양한 경우의 수)
@@ -336,10 +459,14 @@
             }
 
             const selectedPersona = personas[Math.floor(Math.random() * personas.length)];
+            
+            // 세부 항목 내 돌발질문 중 무작위 1개 추출
+            const selectedObjection = currentTask.objections[Math.floor(Math.random() * currentTask.objections.length)];
 
             document.getElementById('weekBadge').innerText = currentTask.week;
             document.getElementById('taskTitle').innerText = currentTask.title;
             document.getElementById('personaDesc').innerText = `"${selectedPersona}"`;
+            document.getElementById('objectionDesc').innerText = `"${selectedObjection}"`; // 돌발질문 세팅
             
             resetTimer();
         }
