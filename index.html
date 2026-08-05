@@ -157,16 +157,23 @@
 
         <!-- 📊 음성 데시벨 파형 & 실시간 미터 컴포넌트 -->
         <div class="w-full bg-black/60 rounded-xl p-4 border border-white/10 mt-5 mb-2 text-left">
-            <div class="flex justify-between items-center mb-2 text-xs font-semibold">
-                <span class="text-gray-400 flex items-center gap-1">📊 음성 데시벨 파형 (Waveform)</span>
+            <div class="flex flex-wrap justify-between items-center mb-2 text-xs font-semibold gap-1">
+                <span class="text-gray-400 flex items-center gap-1">📊 음성 데시벨 파형 (마우스 드래그로 구간 선택 가능)</span>
                 <span id="dbValueText" class="text-amber-400 font-mono">🔊 실시간: -60 dB</span>
             </div>
             
             <!-- Audio Waveform Canvas -->
-            <canvas id="waveformCanvas" class="w-full h-24 bg-black/80 rounded-lg border border-white/5 block"></canvas>
+            <div class="relative w-full">
+                <canvas id="waveformCanvas" class="w-full h-28 bg-black/80 rounded-lg border border-white/5 block cursor-crosshair"></canvas>
+            </div>
             
+            <div class="flex justify-between items-center mt-2 text-[11px] text-gray-400">
+                <span id="trimRangeText" class="text-emerald-400 font-medium">✂️ 선택 구간: 전체</span>
+                <span class="text-gray-500">💡 정지 후 파형을 드래그하여 구간 선택</span>
+            </div>
+
             <!-- Live Volume Meter Bar -->
-            <div class="w-full bg-gray-800 h-2 rounded-full mt-3 overflow-hidden">
+            <div class="w-full bg-gray-800 h-2 rounded-full mt-2 overflow-hidden">
                 <div id="volumeBar" class="bg-gradient-to-r from-emerald-500 via-amber-500 to-red-500 h-full w-0 transition-all duration-75"></div>
             </div>
         </div>
@@ -180,7 +187,7 @@
             </div>
 
             <!-- 컨트롤 버튼 그룹 (시작 / 일시정지 / 정지 / 다운로드) -->
-            <div class="flex flex-wrap items-center justify-center gap-2 md:gap-4 w-full">
+            <div class="flex flex-wrap items-center justify-center gap-2 md:gap-3 w-full">
                 <!-- 시작 버튼 -->
                 <button id="startBtn" onclick="startSimulation()" class="flex-1 sm:flex-initial justify-center bg-red-600 hover:bg-red-700 text-white font-bold text-sm md:text-base px-6 py-3 rounded-xl shadow-lg transform active:scale-95 transition-all flex items-center gap-2">
                     ▶ 시작
@@ -196,9 +203,14 @@
                     ⏹ 정지
                 </button>
 
-                <!-- 녹음파일 다운로드 버튼 -->
+                <!-- 선택 구간 다운로드 버튼 -->
+                <button id="downloadTrimBtn" onclick="downloadTrimmedAudioFile()" disabled class="w-full sm:w-auto justify-center bg-gray-600 opacity-50 cursor-not-allowed text-white font-bold text-sm md:text-base px-5 py-3 rounded-xl shadow-lg transform active:scale-95 transition-all flex items-center gap-2">
+                    ✂️ 선택구간 다운로드
+                </button>
+
+                <!-- 전체 녹음파일 다운로드 버튼 -->
                 <button id="downloadBtn" onclick="downloadAudioFile()" disabled class="w-full sm:w-auto justify-center bg-gray-600 opacity-50 cursor-not-allowed text-white font-bold text-sm md:text-base px-5 py-3 rounded-xl shadow-lg transform active:scale-95 transition-all flex items-center gap-2">
-                    💾 녹음파일 다운로드
+                    💾 전체 다운로드
                 </button>
             </div>
             
@@ -604,6 +616,7 @@
             const pauseBtn = document.getElementById('pauseBtn');
             const stopBtn = document.getElementById('stopBtn');
             const downloadBtn = document.getElementById('downloadBtn');
+            const downloadTrimBtn = document.getElementById('downloadTrimBtn');
             const indicator = document.getElementById('recordingIndicator');
 
             // 버튼 기본 반응형 스타일 클래스
@@ -624,6 +637,9 @@
                 downloadBtn.disabled = true;
                 downloadBtn.className = `${downloadBtnBase} bg-gray-600 opacity-50 cursor-not-allowed text-white`;
 
+                downloadTrimBtn.disabled = true;
+                downloadTrimBtn.className = `${downloadBtnBase} bg-gray-600 opacity-50 cursor-not-allowed text-white`;
+
                 indicator.className = "inline-block w-2.5 h-2.5 bg-red-600 rounded-full animate-ping";
             } else if (state === 'paused') {
                 pauseBtn.innerText = "▶ 재개";
@@ -638,9 +654,13 @@
                 stopBtn.disabled = true;
                 stopBtn.className = `${btnBase} bg-gray-600 opacity-50 cursor-not-allowed text-white`;
 
-                // 녹음 다운로드 버튼 활성화
+                // 전체 다운로드 버튼 활성화
                 downloadBtn.disabled = false;
-                downloadBtn.className = `${downloadBtnBase} bg-emerald-600 hover:bg-emerald-700 text-white transform active:scale-95 transition-all animate-bounce`;
+                downloadBtn.className = `${downloadBtnBase} bg-emerald-600 hover:bg-emerald-700 text-white transform active:scale-95 transition-all`;
+
+                // 선택 구간 다운로드 버튼 활성화
+                downloadTrimBtn.disabled = false;
+                downloadTrimBtn.className = `${downloadBtnBase} bg-amber-600 hover:bg-amber-700 text-white transform active:scale-95 transition-all animate-bounce`;
 
                 indicator.className = "inline-block w-2.5 h-2.5 bg-gray-500 rounded-full";
             } else { // initial
@@ -656,6 +676,9 @@
 
                 downloadBtn.disabled = true;
                 downloadBtn.className = `${downloadBtnBase} bg-gray-600 opacity-50 cursor-not-allowed text-white`;
+
+                downloadTrimBtn.disabled = true;
+                downloadTrimBtn.className = `${downloadBtnBase} bg-gray-600 opacity-50 cursor-not-allowed text-white`;
 
                 indicator.className = "inline-block w-2.5 h-2.5 bg-gray-500 rounded-full";
             }
@@ -867,6 +890,11 @@
             setControlState('stopped');
         }
 
+        // 정지 후 파형 구간 선택 관련 변수
+        let isSelectingTrim = false;
+        let trimStartRatio = 0.0; // 0.0 ~ 1.0
+        let trimEndRatio = 1.0;   // 0.0 ~ 1.0
+
         // 녹음 종료 후 전체 섹션 최종 파형 그래프 재해석 그리기 & 평균 dB 계산
         function drawPostRecordingWaveform() {
             const canvas = document.getElementById('waveformCanvas');
@@ -929,10 +957,100 @@
             ctx.fill();
             ctx.stroke();
 
+            // ✂️ 드래그 선택 영역 오버레이 하이라이트 표시
+            const minRatio = Math.min(trimStartRatio, trimEndRatio);
+            const maxRatio = Math.max(trimStartRatio, trimEndRatio);
+            const startX = minRatio * canvas.width;
+            const endX = maxRatio * canvas.width;
+            const selectionWidth = endX - startX;
+
+            if (selectionWidth > 0 && (minRatio > 0.001 || maxRatio < 0.999)) {
+                // 반투명 하이라이트 박스
+                ctx.fillStyle = 'rgba(239, 68, 68, 0.25)'; // red-500/25
+                ctx.fillRect(startX, 0, selectionWidth, canvas.height);
+
+                // 왼쪽/오른쪽 가이드라인
+                ctx.strokeStyle = '#ef4444';
+                ctx.lineWidth = 2 * (window.devicePixelRatio || 1);
+                ctx.beginPath();
+                ctx.moveTo(startX, 0);
+                ctx.lineTo(startX, canvas.height);
+                ctx.moveTo(endX, 0);
+                ctx.lineTo(endX, canvas.height);
+                ctx.stroke();
+            }
+
+            // 선택 구간 시간(초) 계산
+            const startTimeSec = Math.round(minRatio * elapsedTime);
+            const endTimeSec = Math.round(maxRatio * elapsedTime);
+            const durationSec = endTimeSec - startTimeSec;
+
+            const formatSec = (s) => {
+                const m = Math.floor(s / 60);
+                const sec = s % 60;
+                return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+            };
+
+            const trimText = document.getElementById('trimRangeText');
+            if (minRatio <= 0.001 && maxRatio >= 0.999) {
+                trimText.innerText = `✂️ 선택 구간: 전체 (${formatSec(elapsedTime)})`;
+            } else {
+                trimText.innerText = `✂️ 선택 구간: ${formatSec(startTimeSec)} ~ ${formatSec(endTimeSec)} (총 ${durationSec}초)`;
+            }
+
             // 상태 텍스트에 평균 및 피크 데시벨 안내 업데이트
             document.getElementById('dbValueText').innerText = `📊 평균: ${avgDb} dB (최고: ${Math.round(maxDb)} dB)`;
             document.getElementById('volumeBar').style.width = "0%";
-            document.getElementById('statusMsg').innerText = `✅ 시뮬레이션 종료! [평균 음성 크기: ${avgDb} dB / 피크: ${Math.round(maxDb)} dB] 녹음 파일 다운로드가 가능합니다.`;
+            document.getElementById('statusMsg').innerText = `✅ 시뮬레이션 종료! [평균: ${avgDb} dB / 피크: ${Math.round(maxDb)} dB] 파형을 드래그하여 원하는 구간만 선택 다운로드할 수 있습니다.`;
+        }
+
+        // 캔버스 마우스 드래그 기반 구간 선택 이벤트
+        function initWaveformCanvasEvents() {
+            const canvas = document.getElementById('waveformCanvas');
+            if (!canvas) return;
+
+            let dragStartX = 0;
+
+            const getCanvasRatio = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const relativeX = Math.max(0, Math.min(rect.width, clientX - rect.left));
+                return relativeX / rect.width;
+            };
+
+            const startDrag = (e) => {
+                if (isRunning || !recordedAudioBlob) return; // 녹음 완료 상태에서만 가능
+                isSelectingTrim = true;
+                const ratio = getCanvasRatio(e);
+                trimStartRatio = ratio;
+                trimEndRatio = ratio;
+                drawPostRecordingWaveform();
+            };
+
+            const moveDrag = (e) => {
+                if (!isSelectingTrim || isRunning || !recordedAudioBlob) return;
+                trimEndRatio = getCanvasRatio(e);
+                drawPostRecordingWaveform();
+            };
+
+            const stopDrag = () => {
+                if (!isSelectingTrim) return;
+                isSelectingTrim = false;
+                // 최소 영역 클릭 시 전체로 리셋
+                if (Math.abs(trimEndRatio - trimStartRatio) < 0.01) {
+                    trimStartRatio = 0.0;
+                    trimEndRatio = 1.0;
+                }
+                drawPostRecordingWaveform();
+            };
+
+            canvas.addEventListener('mousedown', startDrag);
+            canvas.addEventListener('mousemove', moveDrag);
+            window.addEventListener('mouseup', stopDrag);
+
+            canvas.addEventListener('touchstart', startDrag, { passive: true });
+            canvas.addEventListener('touchmove', moveDrag, { passive: true });
+            window.addEventListener('touchend', stopDrag);
         }
 
         // 음성합성 (TTS)
@@ -945,7 +1063,7 @@
             }
         }
 
-        // 버튼 클릭 시 수동 다운로드 실행 함수
+        // 버튼 클릭 시 수동 전체 다운로드 실행 함수
         function downloadAudioFile() {
             if (!recordedAudioBlob) {
                 alert("다운로드할 녹음 데이터가 없습니다.");
@@ -957,10 +1075,130 @@
             a.href = audioUrl;
             
             const cleanTitle = currentTask.title.replace(/[/\\?%*:|"<>]/g, '_');
-            a.download = `${currentTask.week}_${cleanTitle}.webm`;
+            a.download = `${currentTask.week}_${cleanTitle}_전체.webm`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
+        }
+
+        // ✂️ 선택 구간 자르기 & WAV 파일 다운로드
+        async function downloadTrimmedAudioFile() {
+            if (!recordedAudioBlob) {
+                alert("다운로드할 녹음 데이터가 없습니다.");
+                return;
+            }
+
+            const minRatio = Math.min(trimStartRatio, trimEndRatio);
+            const maxRatio = Math.max(trimStartRatio, trimEndRatio);
+
+            if (minRatio <= 0.001 && maxRatio >= 0.999) {
+                // 전체 다운로드와 동일
+                downloadAudioFile();
+                return;
+            }
+
+            try {
+                // Blob -> ArrayBuffer -> AudioBuffer 디코딩
+                const arrayBuffer = await recordedAudioBlob.arrayBuffer();
+                const tempAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const audioBuffer = await tempAudioCtx.decodeAudioData(arrayBuffer);
+
+                const duration = audioBuffer.duration;
+                const startSample = Math.floor(minRatio * audioBuffer.length);
+                const endSample = Math.floor(maxRatio * audioBuffer.length);
+                const trimmedLength = Math.max(1, endSample - startSample);
+
+                // 잘라낸 새로운 AudioBuffer 생성
+                const trimmedBuffer = tempAudioCtx.createBuffer(
+                    audioBuffer.numberOfChannels,
+                    trimmedLength,
+                    audioBuffer.sampleRate
+                );
+
+                for (let channel = 0; channel < audioBuffer.numberOfChannels; channel++) {
+                    const channelData = audioBuffer.getChannelData(channel);
+                    const trimmedChannelData = trimmedBuffer.getChannelData(channel);
+                    for (let i = 0; i < trimmedLength; i++) {
+                        trimmedChannelData[i] = channelData[startSample + i];
+                    }
+                }
+
+                // AudioBuffer -> WAV Blob 변환
+                const wavBlob = audioBufferToWavBlob(trimmedBuffer);
+                const wavUrl = URL.createObjectURL(wavBlob);
+
+                const a = document.createElement('a');
+                a.href = wavUrl;
+                
+                const cleanTitle = currentTask.title.replace(/[/\\?%*:|"<>]/g, '_');
+                const startTimeSec = Math.round(minRatio * elapsedTime);
+                const endTimeSec = Math.round(maxRatio * elapsedTime);
+                a.download = `${currentTask.week}_${cleanTitle}_구간자르기(${startTimeSec}s-${endTimeSec}s).wav`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                tempAudioCtx.close();
+
+            } catch (err) {
+                console.error("구간 자르기 오류:", err);
+                alert("구간 자르기 처리 중 오류가 발생했습니다. 원본 전체 다운로드를 이용해주세요.");
+            }
+        }
+
+        // AudioBuffer -> WAV Blob 인코더 함수
+        function audioBufferToWavBlob(buffer) {
+            const numOfChan = buffer.numberOfChannels;
+            const length = buffer.length * numOfChan * 2 + 44;
+            const out = new DataView(new ArrayBuffer(length));
+            let channels = [], sampleRate = buffer.sampleRate, offset = 0, pos = 0;
+
+            function writeString(str) {
+                for (let i = 0; i < str.length; i++) {
+                    out.setUint8(pos++, str.charCodeAt(i));
+                }
+            }
+
+            function setUint16(data) {
+                out.setUint16(pos, data, true);
+                pos += 2;
+            }
+
+            function setUint32(data) {
+                out.setUint32(pos, data, true);
+                pos += 4;
+            }
+
+            // WAV 헤더 작성
+            writeString('RIFF');
+            setUint32(length - 8);
+            writeString('WAVE');
+            writeString('fmt ');
+            setUint32(16);
+            setUint16(1); // PCM
+            setUint16(numOfChan);
+            setUint32(sampleRate);
+            setUint32(sampleRate * 2 * numOfChan);
+            setUint16(numOfChan * 2);
+            setUint16(16);
+            writeString('data');
+            setUint32(length - pos - 4);
+
+            for (let i = 0; i < buffer.numberOfChannels; i++) {
+                channels.push(buffer.getChannelData(i));
+            }
+
+            while (offset < buffer.length) {
+                for (let i = 0; i < numOfChan; i++) {
+                    let sample = Math.max(-1, Math.min(1, channels[i][offset]));
+                    sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767) | 0;
+                    out.setInt16(pos, sample, true);
+                    pos += 2;
+                }
+                offset++;
+            }
+
+            return new Blob([out], { type: 'audio/wav' });
         }
 
         // 배경 제어 관련 변수 및 함수
@@ -1029,6 +1267,7 @@
         window.onload = () => {
             drawNewSimulation();
             changeBackground(); // 디폴트 배경인 'none'(검은 화면) 세팅
+            initWaveformCanvasEvents(); // 캔버스 파형 드래그 이벤트 등록
         };
     </script>
 </body>
