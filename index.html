@@ -768,6 +768,13 @@
         async function startSimulation() {
             if (isRunning) return;
 
+            // 정지 후 이전 녹음 데이터가 존재하는 상태에서 다시 '시작'을 누르는 경우 덮어쓰기 안내 확인
+            if (recordedAudioBlob) {
+                const confirmOverwrite = confirm("이전 시뮬레이션의 녹음 데이터가 있습니다. 새로운 녹음을 시작하면 이전 녹음 및 파형이 초기화됩니다. 계속 진행하시겠습니까?");
+                if (!confirmOverwrite) return;
+                resetTimer();
+            }
+
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaRecorder = new MediaRecorder(stream);
