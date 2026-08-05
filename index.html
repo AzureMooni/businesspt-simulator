@@ -59,19 +59,13 @@
         /* 헤더/푸터/선택 도구 전환 트랜지션 */
         header, footer, .control-panel {
             transition: opacity 0.3s ease, transform 0.3s ease;
-            opacity: 0.8; /* 기본 80% 불투명도 */
         }
-        header:hover {
-            opacity: 1 !important; /* 마우스를 올리면 100% 선명하게 표시 */
+        header {
+            opacity: 1 !important; /* 상단 헤더 메뉴는 항상 선명하고 또렷하게 유지 */
         }
         .ui-hidden {
-            opacity: 0 !important; /* UI 숨김 시에는 투명하게 숨김 */
-            pointer-events: none; /* 숨겨진 상태에서 기본 클릭 방지 */
-        }
-        /* UI가 숨겨졌을 때 상단 마우스 호버 영역 확보 (다시 켜기 가능하도록 설정) */
-        header.ui-hidden:hover {
-            opacity: 1 !important;
-            pointer-events: auto !important;
+            opacity: 0 !important;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -706,20 +700,16 @@
         function toggleCardVisibility() {
             const isChecked = document.getElementById('toggleCardCheckbox').checked;
             const mainCard = document.getElementById('mainCard');
-            const mainHeader = document.getElementById('mainHeader');
             const mainFooter = document.getElementById('mainFooter');
 
             if (isChecked) {
-                // UI 전체 보이기: 숨김 클래스 제거
+                // UI 보이기: 메인 카드 및 푸터 표시
                 mainCard.classList.remove('card-hidden');
-                mainHeader.classList.remove('ui-hidden');
                 mainFooter.classList.remove('card-hidden');
             } else {
-                // UI 숨기기: 카드를 숨기고 상단 헤더는 마우스 호버 시 보여서 다시 클릭 가능하도록 함
+                // UI 숨기기: 메인 카드 및 푸터만 숨김 (상단 헤더 버튼들은 항상 유지)
                 mainCard.classList.add('card-hidden');
                 mainFooter.classList.add('card-hidden');
-                // header는 ui-hidden 클래스를 주되, CSS hover로 접근 가능
-                mainHeader.classList.add('ui-hidden');
             }
         }
 
