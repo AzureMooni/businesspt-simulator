@@ -59,19 +59,19 @@
         /* 헤더/푸터/선택 도구 전환 트랜지션 */
         header, footer, .control-panel {
             transition: opacity 0.3s ease, transform 0.3s ease;
-            opacity: 0.6; /* 기본적으로 상단 메뉴를 흐리게 설정 (60% 불투명도) */
+            opacity: 0.8; /* 기본 80% 불투명도 */
         }
         header:hover {
             opacity: 1 !important; /* 마우스를 올리면 100% 선명하게 표시 */
         }
         .ui-hidden {
             opacity: 0 !important; /* UI 숨김 시에는 투명하게 숨김 */
-            pointer-events: none; /* 숨겨진 상태에서 클릭 방지 */
+            pointer-events: none; /* 숨겨진 상태에서 기본 클릭 방지 */
         }
-        /* UI가 완전히 숨겨졌을 때도 작동하는 헤더 조작용 호버 영역 */
+        /* UI가 숨겨졌을 때 상단 마우스 호버 영역 확보 (다시 켜기 가능하도록 설정) */
         header.ui-hidden:hover {
             opacity: 1 !important;
-            pointer-events: auto;
+            pointer-events: auto !important;
         }
     </style>
 </head>
@@ -710,13 +710,16 @@
             const mainFooter = document.getElementById('mainFooter');
 
             if (isChecked) {
+                // UI 전체 보이기: 숨김 클래스 제거
                 mainCard.classList.remove('card-hidden');
                 mainHeader.classList.remove('ui-hidden');
                 mainFooter.classList.remove('card-hidden');
             } else {
+                // UI 숨기기: 카드를 숨기고 상단 헤더는 마우스 호버 시 보여서 다시 클릭 가능하도록 함
                 mainCard.classList.add('card-hidden');
-                mainHeader.classList.add('ui-hidden');
                 mainFooter.classList.add('card-hidden');
+                // header는 ui-hidden 클래스를 주되, CSS hover로 접근 가능
+                mainHeader.classList.add('ui-hidden');
             }
         }
 
