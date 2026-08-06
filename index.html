@@ -26,31 +26,31 @@
             font-family: 'Inter', monospace;
         }
 
-        /* 배경 요소 공통 스타일 (비디오/카메라) */
+        /* 배경 요소 공통 스타일 (비디오/카메라 - 화면 고정 position: fixed 및 워터마크 크롭) */
         .bg-element {
-            position: absolute;
+            position: fixed;
             top: 50%;
             left: 50%;
-            min-width: 100%;
-            min-height: 100%;
+            min-width: 100vw;
+            min-height: 100vh;
             width: auto;
             height: auto;
             z-index: 0;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) scale(1.15);
             object-fit: cover;
             display: none; /* 기본 숨김 */
         }
         /* 카메라 거울 모드 효과 */
         .mirror-mode {
-            transform: translate(-50%, -50%) scaleX(-1);
+            transform: translate(-50%, -50%) scaleX(-1) scale(1.15);
         }
-        /* 어두운 오버레이 레이어 */
+        /* 어두운 오버레이 레이어 (화면 고정 fixed) */
         .bg-overlay {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             background: rgba(0, 0, 0, 0.65);
             z-index: 1;
             display: none; /* 기본 숨김 */
@@ -88,8 +88,11 @@
 </head>
 <body class="min-h-screen w-screen flex flex-col justify-between items-center text-white p-4 md:p-6 relative overflow-x-hidden overflow-y-auto">
 
-    <!-- 1. 배경 비디오 (무한 반복, 음소거, 자동 재생) -->
-    <video id="bgVideo" autoplay loop muted playsinline class="bg-element">
+    <!-- 1. 듀얼 배경 비디오 (0ms Seamless 1초 디졸브 크로스페이드 루프) -->
+    <video id="bgVideoA" autoplay muted playsinline class="bg-element transition-opacity duration-1000" style="opacity: 1;">
+        <source src="./background-video.mp4" type="video/mp4">
+    </video>
+    <video id="bgVideoB" muted playsinline class="bg-element transition-opacity duration-1000" style="opacity: 0;">
         <source src="./background-video.mp4" type="video/mp4">
     </video>
 
@@ -99,8 +102,8 @@
     <!-- 어두운 오버레이 레이어 -->
     <div id="bgOverlay" class="bg-overlay"></div>
 
-    <!-- 상단 헤더 (심플 스마트 뷰 모드) -->
-    <header id="mainHeader" class="w-full max-w-4xl flex justify-between items-center z-10 mb-4 px-2">
+    <!-- 상단 헤더 (배경 박스 제거 및 깔끔한 플로팅 스티키 배치) -->
+    <header id="mainHeader" class="w-full max-w-4xl flex justify-between items-center z-20 sticky top-0 py-2 px-2 mb-4">
         <!-- 타이틀 (홈 리셋 버튼 역할) -->
         <button onclick="goHome()" class="text-sm sm:text-base md:text-lg font-black tracking-wider text-red-500 uppercase flex items-center gap-2 whitespace-nowrap hover:text-red-400 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group" title="홈으로 이동 (새 시뮬레이션 뽑기 & UI 원복)">
             <span id="recordingIndicator" class="inline-block w-2.5 h-2.5 bg-gray-500 rounded-full group-hover:bg-red-400 transition"></span>
@@ -262,7 +265,7 @@
                         <select id="bgSelect" onchange="changeBackground()" class="w-full bg-black/60 text-xs text-white border border-white/20 p-2 rounded-lg outline-none cursor-pointer">
                             <option value="none" class="bg-neutral-900">⚫ 배경 없음 (검은 화면)</option>
                             <option value="camera" class="bg-neutral-900">📷 내 카메라 (거울 모드)</option>
-                            <option value="video" class="bg-neutral-900">👥 실전 시뮬레이션 (비디오)</option>
+                            <option value="video" class="bg-neutral-900" selected>👥 실전 시뮬레이션 (비디오)</option>
                         </select>
                     </div>
 
@@ -350,18 +353,35 @@
     <!-- 메인 시뮬레이션 정보 카드 -->
     <main id="mainCard" class="w-full max-w-3xl glass-card glass-card-glow rounded-2xl p-5 md:p-8 shadow-2xl z-10 my-auto text-center border-t-2 border-t-red-500">
         
-        <!-- 주차 및 세부 항목 -->
-        <div class="mb-4 md:mb-6">
-            <div class="flex items-center justify-center gap-2">
-                <span id="weekBadge" class="bg-red-950/90 text-red-200 text-[10px] md:text-xs font-extrabold px-3 py-1 rounded-full border border-red-500/40 uppercase tracking-widest shadow-sm">
-                    0주차 (필수)
+        <!-- 1. 고정 필수 과제 (0주차 1번 - 배경 박스 제거하고 깔끔한 텍스트 배치) -->
+        <div class="mb-4 text-left px-1">
+            <div class="flex items-center gap-2 mb-1.5">
+                <span class="bg-red-600/90 text-white text-[10px] md:text-xs font-black px-2.5 py-0.5 rounded-full tracking-wider uppercase shadow-sm">
+                    0주차 🔥 필수 진행 과제
                 </span>
+            </div>
+            <h3 class="text-base md:text-xl font-black text-red-100 leading-snug">
+                1. 지원동기 및 목표 물어보기 / 강의 후기, 각오, 설문기반 대화
+            </h3>
+        </div>
+
+        <!-- 2. 무작위 뽑기 과제 (0주차 2~3번 및 1~4주차 항목) -->
+        <div class="bg-white/5 border border-white/10 rounded-xl p-3.5 md:p-4 mb-4 text-left shadow-sm">
+            <div class="flex items-center justify-between mb-1">
+                <div class="flex items-center gap-2">
+                    <span id="weekBadge" class="bg-amber-500/20 text-amber-300 text-[10px] md:text-xs font-extrabold px-2.5 py-0.5 rounded border border-amber-500/30">
+                        1주차
+                    </span>
+                    <span class="text-[10px] md:text-xs font-extrabold text-gray-400">
+                        🎲 훈련 과제 (랜덤 추첨)
+                    </span>
+                </div>
                 <button onclick="toggleTaskSelectModal()" class="bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white text-[10px] md:text-xs font-bold px-2.5 py-1 rounded-md border border-white/15 transition flex items-center gap-1 shadow-sm" title="과제 직접 선택">
                     📌 과제 변경
                 </button>
             </div>
-            <h2 id="taskTitle" class="text-lg md:text-2xl font-black mt-3 text-white leading-tight tracking-tight">
-                1. 지원동기 및 목표 물어보기 / 강의 후기, 각오, 설문기반 대화
+            <h2 id="taskTitle" class="text-base md:text-xl font-black text-white leading-tight mt-1">
+                1. 수익화 구조 적용 사례 보여주기 + 20문제 풀이
             </h2>
         </div>
 
@@ -620,7 +640,7 @@
             },
             { 
                 week: "3주차", 
-                title: "2. 내 아이템 기특장 찾기 (챗지피티 교육생 준비)",
+                title: "2. 내 아이템 기특장 찾기_챗지피티 교육생 준비",
                 objections: [
                     "챗지피티/AI로 대본과 아이템 다 만들면 되는 거 아닌가요?",
                     "제 아이템은 특별한 장점(기특장)이 없는 것 같아요."
@@ -628,7 +648,7 @@
             },
             { 
                 week: "3주차", 
-                title: "3. 키컨 썸네일 찾기 + 설득구조 (뷰트랩/실행시트)",
+                title: "3. 키컨 썸네일 찾기 + 설득구조 (전제 : 앞에 기특장 찾아진 상태)_뷰트랩/실행시트",
                 objections: [
                     "트레이너님이 썸네일 그냥 골라주시면 안 되나요?",
                     "썸끝 원끝을 왜 이렇게까지 열심히 해야 하는지 모르겠어요."
@@ -1109,7 +1129,7 @@
             }, 100);
         }
 
-        // 🏠 홈 리셋 버튼 클릭 함수
+        // 🏠 홈 리셋 버튼 클릭 함수 (상단 0주차 1번 고정 디폴트 + 하단 11개 항목 중 무작위 추첨)
         function goHome() {
             // 녹음 중이면 안전하게 정지
             if (isRunning) {
@@ -1117,27 +1137,25 @@
             }
             // UI 카드 창 원복 (숨겨져 있었다면 보이기)
             setCardVisibility(false);
-            // 새 시뮬레이션 뽑기
+            // 하단 훈련 과제는 0주차 1번을 제외한 11개 항목 풀에서 무작위 추첨 세팅
             drawNewSimulation();
         }
 
-        // 무작위 항목 뽑기
+        // 🎲 무작위 항목 뽑기 (0주차 1번 제외한 통합 항목 풀에서 동등 확률 추첨)
         function drawNewSimulation() {
             if (isRunning) return;
 
-            const isMandatory = Math.random() < 0.3; // 30% 확률로 필수 0주차 1번
-            if (isMandatory) {
-                currentTask = mandatoryTasks[0];
-            } else {
-                currentTask = randomTasks[Math.floor(Math.random() * randomTasks.length)];
-            }
+            const pickedTask = randomTasks[Math.floor(Math.random() * randomTasks.length)];
+            setSimulationTask(pickedTask);
+        }
+
+        // 선택된 과제 기반 화면 세팅 헬퍼 함수
+        function setSimulationTask(taskObj) {
+            currentTask = taskObj;
 
             const selectedPersona = personas[Math.floor(Math.random() * personas.length)];
-            
-            // 주차 수치 추출 ('0주차' -> '0')
             const weekDigits = currentTask.week ? currentTask.week.replace(/[^0-9]/g, '') : "0";
 
-            // DB 라이브 동기화 데이터가 있으면 라이브 돌발질문 우선 활용, 없을 경우 하드코딩 fallback
             let selectedObjection = "";
             if (isLiveSynced && liveObjectionsMap[weekDigits] && liveObjectionsMap[weekDigits].length > 0) {
                 const liveList = liveObjectionsMap[weekDigits];
@@ -1149,8 +1167,8 @@
             document.getElementById('weekBadge').innerText = currentTask.week;
             document.getElementById('taskTitle').innerText = currentTask.title;
             document.getElementById('personaDesc').innerText = `"${selectedObjection}"`;
-            document.getElementById('objectionDesc').innerText = `"${selectedObjection}"`; // 돌발질문 세팅
-            document.getElementById('modalObjectionText').innerText = `"${selectedObjection}"`; // 팝업 모달 질문 세팅
+            document.getElementById('objectionDesc').innerText = `"${selectedObjection}"`;
+            document.getElementById('modalObjectionText').innerText = `"${selectedObjection}"`;
 
             // 페르소나 문장 분할 파싱 (직업/프로필, 목표/아이템, 고민/장벽)
             const parts = selectedPersona.split('.').map(p => p.trim()).filter(p => p.length > 0);
@@ -2000,12 +2018,49 @@
             return new Blob([out], { type: 'audio/wav' });
         }
 
-        // 배경 제어 관련 변수 및 함수
+        // 배경 제어 관련 변수 및 듀얼 비디오 Seamless 무한 루프 시스템
         let cameraStream = null;
+        let activeVideoId = 'A';
+        let dualVideoCheckInterval = null;
+
+        function initSeamlessDualVideoLoop() {
+            const videoA = document.getElementById('bgVideoA');
+            const videoB = document.getElementById('bgVideoB');
+            if (!videoA || !videoB) return;
+
+            // 두 비디오 지속적 백그라운드 무한 동기화 및 2초 전 미리 웜업 교차
+            videoA.loop = true;
+            videoB.loop = true;
+
+            // 0.1초(100ms) 미세 타이머로 잔여시간 감지 및 연속 교차
+            if (dualVideoCheckInterval) clearInterval(dualVideoCheckInterval);
+            
+            dualVideoCheckInterval = setInterval(() => {
+                const currentVid = activeVideoId === 'A' ? videoA : videoB;
+                const nextVid = activeVideoId === 'A' ? videoB : videoA;
+
+                if (currentVid.duration && (currentVid.duration - currentVid.currentTime <= 1.5)) {
+                    // 미리 다음 비디오 재생 시작
+                    if (nextVid.paused) {
+                        nextVid.currentTime = 0;
+                        nextVid.play().catch(() => {});
+                    }
+                }
+
+                if (currentVid.duration && (currentVid.duration - currentVid.currentTime <= 0.8)) {
+                    if (nextVid.style.opacity !== '1') {
+                        nextVid.style.opacity = '1';
+                        currentVid.style.opacity = '0';
+                        activeVideoId = activeVideoId === 'A' ? 'B' : 'A';
+                    }
+                }
+            }, 100);
+        }
 
         async function changeBackground() {
             const selectValue = document.getElementById('bgSelect').value;
-            const bgVideo = document.getElementById('bgVideo');
+            const bgVideoA = document.getElementById('bgVideoA');
+            const bgVideoB = document.getElementById('bgVideoB');
             const bgCamera = document.getElementById('bgCamera');
             const bgOverlay = document.getElementById('bgOverlay');
 
@@ -2016,20 +2071,32 @@
                 bgCamera.srcObject = null;
             }
 
+            if (dualVideoCheckInterval) {
+                clearInterval(dualVideoCheckInterval);
+                dualVideoCheckInterval = null;
+            }
+
             // 2. 모든 배경 요소 숨기기
-            bgVideo.style.display = 'none';
+            bgVideoA.style.display = 'none';
+            bgVideoB.style.display = 'none';
             bgCamera.style.display = 'none';
             bgOverlay.style.display = 'none';
 
             // 3. 선택된 배경 활성화
             if (selectValue === 'video') {
-                bgVideo.style.display = 'block';
+                bgVideoA.style.display = 'block';
+                bgVideoB.style.display = 'block';
                 bgOverlay.style.display = 'block';
-                // 비디오를 다시 로드하고 재생하여 렌더링이 바로 시작되도록 조치
-                bgVideo.load();
-                bgVideo.play().catch(err => {
-                    console.log("비디오 재생 오류:", err);
-                });
+
+                activeVideoId = 'A';
+                bgVideoA.style.opacity = '1';
+                bgVideoB.style.opacity = '0';
+
+                bgVideoA.currentTime = 0;
+                bgVideoA.play().catch(err => console.log("비디오A 재생 오류:", err));
+                
+                // 듀얼 비디오 0ms 무한 루프 모니터링 활성화
+                initSeamlessDualVideoLoop();
             } else if (selectValue === 'camera') {
                 try {
                     cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
@@ -2087,8 +2154,8 @@
         window.onload = () => {
             checkWhatsNewBadge(); // 최신 업데이트 읽음 뱃지 확인
             syncLiveObjections(); // 12기 커뮤니티 Supabase 라이브 돌발질문 동기화
-            drawNewSimulation();
-            changeBackground(); // 디폴트 배경인 'none'(검은 화면) 세팅
+            applyPresetMode('hard'); // 🔥 실전 비디오 하드 모드 (Hard)를 디폴트로 세팅
+            goHome(); // 0주차 1번 필수과제 디폴트 세팅 및 페르소나 초기화
             initWaveformCanvasEvents(); // 캔버스 파형 드래그 이벤트 등록
         };
     </script>
