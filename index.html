@@ -122,6 +122,11 @@
                 🚀 12기 BPT 성장 커뮤니티 바로가기
             </a>
 
+            <!-- 📌 특정 주차/항목 지정 선택 버튼 -->
+            <button onclick="toggleSettingsModal(); toggleTaskSelectModal();" class="w-full flex items-center justify-center gap-1.5 bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs py-2.5 rounded-lg transition">
+                📌 주차/과제 직접 지정 선택
+            </button>
+
             <!-- 1. 돌발질문 모드 설정 -->
             <div class="space-y-1">
                 <label class="text-xs font-semibold text-gray-300">🚨 돌발질문 방식</label>
@@ -167,14 +172,74 @@
         </div>
     </div>
 
+    <!-- 📌 주차 및 세부 과제 수동 선택 모달 -->
+    <div id="taskSelectModal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 hidden flex items-center justify-center transition-all">
+        <div class="glass-card bg-neutral-900 border border-white/20 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl text-left space-y-4 max-h-[85vh] flex flex-col">
+            <div class="flex justify-between items-center border-b border-white/10 pb-3 shrink-0">
+                <h3 class="text-base font-bold text-white flex items-center gap-1.5">📌 주차 및 과제 선택</h3>
+                <button onclick="toggleTaskSelectModal()" class="text-gray-400 hover:text-white text-lg font-bold">✕</button>
+            </div>
+
+            <p class="text-xs text-gray-400 shrink-0">연습하고 싶은 주차와 세부 과제를 선택하세요:</p>
+
+            <!-- 주차별 과제 목록 선택 드롭다운 -->
+            <div class="space-y-3 overflow-y-auto pr-1 flex-1">
+                <div>
+                    <label class="text-xs font-bold text-red-400 block mb-1">0주차 (오리엔테이션)</label>
+                    <select id="selectWeek0Tasks" onchange="selectManualTask('0', this.value)" class="w-full bg-black/60 text-xs text-white border border-white/20 p-2.5 rounded-lg outline-none cursor-pointer">
+                        <option value="" disabled selected>0주차 항목 선택...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-amber-400 block mb-1">1주차 (수익화 기획)</label>
+                    <select id="selectWeek1Tasks" onchange="selectManualTask('1', this.value)" class="w-full bg-black/60 text-xs text-white border border-white/20 p-2.5 rounded-lg outline-none cursor-pointer">
+                        <option value="" disabled selected>1주차 항목 선택...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-emerald-400 block mb-1">2주차 (아이템 선정)</label>
+                    <select id="selectWeek2Tasks" onchange="selectManualTask('2', this.value)" class="w-full bg-black/60 text-xs text-white border border-white/20 p-2.5 rounded-lg outline-none cursor-pointer">
+                        <option value="" disabled selected>2주차 항목 선택...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-blue-400 block mb-1">3주차 (키 콘텐츠 기획)</label>
+                    <select id="selectWeek3Tasks" onchange="selectManualTask('3', this.value)" class="w-full bg-black/60 text-xs text-white border border-white/20 p-2.5 rounded-lg outline-none cursor-pointer">
+                        <option value="" disabled selected>3주차 항목 선택...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-purple-400 block mb-1">4주차 (풀링콘텐츠 기획)</label>
+                    <select id="selectWeek4Tasks" onchange="selectManualTask('4', this.value)" class="w-full bg-black/60 text-xs text-white border border-white/20 p-2.5 rounded-lg outline-none cursor-pointer">
+                        <option value="" disabled selected>4주차 항목 선택...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="pt-2 border-t border-white/10 shrink-0 flex gap-2">
+                <button onclick="drawNewSimulation(); toggleTaskSelectModal();" class="flex-1 bg-white/10 hover:bg-white/20 text-white font-bold text-xs py-2.5 rounded-lg transition">
+                    🎲 무작위 자동 뽑기
+                </button>
+                <button onclick="toggleTaskSelectModal()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold text-xs py-2.5 rounded-lg transition">
+                    닫기
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- 메인 시뮬레이션 정보 카드 -->
     <main id="mainCard" class="w-full max-w-3xl glass-card rounded-2xl p-5 md:p-8 shadow-2xl z-10 my-auto text-center border-t-2 border-t-red-500">
         
         <!-- 주차 및 세부 항목 -->
         <div class="mb-4 md:mb-6">
-            <span id="weekBadge" class="bg-red-900/80 text-red-200 text-[10px] md:text-xs font-bold px-2.5 py-1 rounded-full border border-red-500/30 uppercase tracking-widest">
-                0주차 (필수)
-            </span>
+            <div class="flex items-center justify-center gap-2">
+                <span id="weekBadge" class="bg-red-900/80 text-red-200 text-[10px] md:text-xs font-bold px-2.5 py-1 rounded-full border border-red-500/30 uppercase tracking-widest">
+                    0주차 (필수)
+                </span>
+                <button onclick="toggleTaskSelectModal()" class="bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white text-[10px] md:text-xs font-semibold px-2 py-0.5 rounded-md border border-white/10 transition flex items-center gap-1" title="과제 직접 선택">
+                    📌 과제 변경
+                </button>
+            </div>
             <h2 id="taskTitle" class="text-lg md:text-2xl font-bold mt-3 text-white leading-tight">
                 1. 지원동기 및 목표 물어보기 / 강의 후기, 각오, 설문기반 대화
             </h2>
@@ -955,6 +1020,88 @@
             if (modal) {
                 modal.classList.toggle('hidden');
             }
+        }
+
+        // 📌 주차/과제 선택 모달 토글 & 드롭다운 채우기
+        function toggleTaskSelectModal() {
+            const modal = document.getElementById('taskSelectModal');
+            if (modal) {
+                modal.classList.toggle('hidden');
+                if (!modal.classList.contains('hidden')) {
+                    populateTaskDropdowns();
+                }
+            }
+        }
+
+        // 주차별 과제 옵션 생성
+        function populateTaskDropdowns() {
+            const allTasks = [...mandatoryTasks, ...randomTasks];
+            const weekIds = ['0', '1', '2', '3', '4'];
+            
+            weekIds.forEach(w => {
+                const select = document.getElementById(`selectWeek${w}Tasks`);
+                if (!select) return;
+
+                // 기존 옵션 초기화 후 기본 안내 문구 배치
+                select.innerHTML = `<option value="" disabled selected>${w}주차 항목 선택...</option>`;
+
+                const matchingTasks = allTasks.filter(t => {
+                    const digits = t.week ? t.week.replace(/[^0-9]/g, '') : "0";
+                    return digits === w;
+                });
+
+                matchingTasks.forEach((t, idx) => {
+                    const opt = document.createElement('option');
+                    opt.value = t.title;
+                    opt.className = "bg-neutral-900 text-white";
+                    opt.innerText = t.title;
+                    select.appendChild(opt);
+                });
+            });
+        }
+
+        // 사용자가 직접 특정 주차 및 과제를 지정 선택했을 때 실행
+        function selectManualTask(weekNum, taskTitle) {
+            if (isRunning) return;
+
+            const allTasks = [...mandatoryTasks, ...randomTasks];
+            const targetTask = allTasks.find(t => t.title === taskTitle);
+            if (!targetTask) return;
+
+            // 수동 선택된 과제 세팅 및 페르소나/돌발질문 새로 세팅
+            currentTask = targetTask;
+
+            const selectedPersona = personas[Math.floor(Math.random() * personas.length)];
+            const weekDigits = currentTask.week ? currentTask.week.replace(/[^0-9]/g, '') : "0";
+
+            let selectedObjection = "";
+            if (isLiveSynced && liveObjectionsMap[weekDigits] && liveObjectionsMap[weekDigits].length > 0) {
+                const liveList = liveObjectionsMap[weekDigits];
+                selectedObjection = liveList[Math.floor(Math.random() * liveList.length)];
+            } else {
+                selectedObjection = currentTask.objections[Math.floor(Math.random() * currentTask.objections.length)];
+            }
+
+            document.getElementById('weekBadge').innerText = currentTask.week;
+            document.getElementById('taskTitle').innerText = currentTask.title;
+            document.getElementById('personaDesc').innerText = `"${selectedObjection}"`;
+            document.getElementById('objectionDesc').innerText = `"${selectedObjection}"`;
+            document.getElementById('modalObjectionText').innerText = `"${selectedObjection}"`;
+
+            const parts = selectedPersona.split('.').map(p => p.trim()).filter(p => p.length > 0);
+            const profileText = parts[0] || selectedPersona;
+            const goalText = parts[1] || "특정 수익화 목표 설정 필요";
+            const painText = parts.slice(2).join('. ') || "상세 상담 및 가이드 필요";
+
+            document.getElementById('personaProfileText').innerText = profileText;
+            document.getElementById('personaGoalText').innerText = goalText;
+            document.getElementById('personaPainText').innerText = painText;
+
+            updateObjectionBoxVisibility();
+            resetTimer();
+
+            // 선택 후 모달 닫기
+            toggleTaskSelectModal();
         }
 
         // 타이머 및 상태 초기화
