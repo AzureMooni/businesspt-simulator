@@ -124,9 +124,10 @@
                 🚀 12기 커뮤니티
             </a>
 
-            <!-- 다시 뽑기 버튼 -->
-            <button onclick="drawNewSimulation()" class="bg-white/10 hover:bg-white/20 text-xs px-3 py-1.5 rounded-lg border border-white/20 transition whitespace-nowrap font-medium flex items-center gap-1">
-                🎲 다시 뽑기
+            <!-- 👁️ 메인 시뮬레이션 창 토글 버튼 (사라지지 않는 컨트롤) -->
+            <button id="toggleCardHeaderBtn" onclick="toggleMainCardFromHeader()" class="bg-white/10 hover:bg-white/20 text-xs px-3 py-1.5 rounded-lg border border-white/20 transition whitespace-nowrap font-bold flex items-center gap-1 shadow-sm" title="가운데 시뮬레이션 창 숨기기/보이기">
+                <span id="toggleCardIcon">👁️</span>
+                <span id="toggleCardText">UI 숨기기</span>
             </button>
 
             <!-- ⚙️ 환경 설정 팝업 버튼 -->
@@ -1980,20 +1981,41 @@
             }
         }
 
-        // 메인 정보 카드 및 UI 구성 요소 토글 켜기/끄기 기능
+        // 메인 정보 카드 및 UI 구성 요소 토글 켜기/끄기 기능 (헤더 버튼 & 설정 체크박스 연동)
+        function toggleMainCardFromHeader() {
+            const mainCard = document.getElementById('mainCard');
+            const isHidden = mainCard.classList.contains('card-hidden');
+            
+            // 토글 반전
+            setCardVisibility(!isHidden);
+        }
+
         function toggleCardVisibility() {
             const isChecked = document.getElementById('toggleCardCheckbox').checked;
+            setCardVisibility(!isChecked); // checked === true -> 보임, checked === false -> 숨김
+        }
+
+        function setCardVisibility(hide) {
             const mainCard = document.getElementById('mainCard');
             const mainFooter = document.getElementById('mainFooter');
+            const checkbox = document.getElementById('toggleCardCheckbox');
+            const icon = document.getElementById('toggleCardIcon');
+            const text = document.getElementById('toggleCardText');
 
-            if (isChecked) {
-                // UI 보이기: 메인 카드 및 푸터 표시
-                mainCard.classList.remove('card-hidden');
-                mainFooter.classList.remove('card-hidden');
-            } else {
-                // UI 숨기기: 메인 카드 및 푸터만 숨김 (상단 헤더 버튼들은 항상 유지)
+            if (hide) {
+                // UI 숨기기
                 mainCard.classList.add('card-hidden');
                 mainFooter.classList.add('card-hidden');
+                if (checkbox) checkbox.checked = false;
+                if (icon) icon.innerText = "🙈";
+                if (text) text.innerText = "UI 보이기";
+            } else {
+                // UI 보이기
+                mainCard.classList.remove('card-hidden');
+                mainFooter.classList.remove('card-hidden');
+                if (checkbox) checkbox.checked = true;
+                if (icon) icon.innerText = "👁️";
+                if (text) text.innerText = "UI 숨기기";
             }
         }
 
