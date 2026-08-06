@@ -142,7 +142,7 @@
         <div class="glass-card bg-neutral-900 border border-amber-500/30 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl text-left space-y-4 max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center border-b border-white/10 pb-3 shrink-0">
                 <div class="flex items-center gap-2">
-                    <span class="bg-amber-500/20 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded border border-amber-500/30">v1.2</span>
+                    <span class="bg-amber-500/20 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded border border-amber-500/30">v1.3</span>
                     <h3 class="text-base font-bold text-white flex items-center gap-1.5">✨ 최신 업데이트 소식</h3>
                 </div>
                 <button onclick="toggleWhatsNewModal()" class="text-gray-400 hover:text-white text-lg font-bold">✕</button>
@@ -150,23 +150,23 @@
 
             <div class="space-y-3 overflow-y-auto pr-1 flex-1 text-xs leading-relaxed text-gray-300">
                 <div class="bg-white/5 rounded-xl p-3 border border-white/10 space-y-1">
-                    <div class="font-extrabold text-amber-300 flex items-center gap-1">🌐 12기 Vercel 커뮤니티 실시간 DB 연동</div>
-                    <p class="text-gray-400 text-[11px]">12기 수강생들이 등록해둔 최신 돌발질문들이 시뮬레이터에 실시간으로 출제됩니다!</p>
+                    <div class="font-extrabold text-red-400 flex items-center gap-1">🔥 실전 비디오 하드 모드 (HARD) 신설</div>
+                    <p class="text-gray-400 text-[11px]">실전 비디오 배경 + 🚨 돌발 팝업 경보로 실제 발표장 긴장감을 똑같이 구현한 원클릭 프리셋 추가!</p>
                 </div>
 
                 <div class="bg-white/5 rounded-xl p-3 border border-white/10 space-y-1">
-                    <div class="font-extrabold text-emerald-300 flex items-center gap-1">📌 주차 및 세부 과제 직접 선택</div>
-                    <p class="text-gray-400 text-[11px]">연습하고 싶은 특정 주차(0~4주차)와 세부 항목을 수동으로 선택해 맞춤 연습 가능!</p>
+                    <div class="font-extrabold text-amber-300 flex items-center gap-1">👁️ 헤더 고정 'UI 숨기기/보이기' & 🏠 홈 리셋 버튼</div>
+                    <p class="text-gray-400 text-[11px]">상단 헤더에 사라지지 않는 UI 토글 버튼 추가 & 메인 타이틀을 누르면 홈으로 즉시 리셋됩니다.</p>
                 </div>
 
                 <div class="bg-white/5 rounded-xl p-3 border border-white/10 space-y-1">
-                    <div class="font-extrabold text-purple-300 flex items-center gap-1">🎯 3가지 원클릭 모드 프리셋</div>
-                    <p class="text-gray-400 text-[11px]">실전 테스트, 숏폼/화면 녹화, 라이트 연습 중 원하는 훈련 모드를 원클릭으로 세팅!</p>
+                    <div class="font-extrabold text-emerald-300 flex items-center gap-1">🔤 Pretendard 프리미엄 웹폰트 & 디자인 고도화</div>
+                    <p class="text-gray-400 text-[11px]">Pretendard 웹폰트와 네온 글로우 테두리로 텍스트 시독성과 Visual UI 완성도를 대폭 향상!</p>
                 </div>
 
                 <div class="bg-white/5 rounded-xl p-3 border border-white/10 space-y-1">
-                    <div class="font-extrabold text-red-300 flex items-center gap-1">✂️ 파형 드래그 자르기 & WAV 다운로드</div>
-                    <p class="text-gray-400 text-[11px]">시뮬레이션 후 마우스 드래그로 원하는 구간만 선택해 `.wav` 음성 파일로 다운로드 지원.</p>
+                    <div class="font-extrabold text-purple-300 flex items-center gap-1">🌐 12기 Vercel 커뮤니티 실시간 DB 연동</div>
+                    <p class="text-gray-400 text-[11px]">12기 수강생들이 등록한 최신 돌발질문이 시뮬레이터에 실시간으로 동기화되어 출제됩니다.</p>
                 </div>
             </div>
 
@@ -1163,7 +1163,7 @@
         }
 
         // ✨ What's New 업데이트 공지 모달 토글
-        const LATEST_VERSION = "v1.2";
+        const LATEST_VERSION = "v1.3";
 
         function toggleWhatsNewModal() {
             const modal = document.getElementById('whatsNewModal');
