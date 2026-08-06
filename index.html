@@ -445,34 +445,34 @@
             </p>
         </div>
 
-        <!-- 📊 음성 파형 스마트 컴포넌트 (초기 대기 상태 시 숨김, 시작/종료 시 슬라이드 등장) -->
-        <div id="waveformContainer" class="w-full bg-black/70 rounded-xl p-4 border border-white/15 mt-5 mb-2 text-left hidden transition-all duration-300 shadow-xl">
+        <!-- 📊 음성 파형 스마트 컴포넌트 (높이 최적화로 버튼 위치 보존) -->
+        <div id="waveformContainer" class="w-full bg-black/70 rounded-xl p-2.5 border border-white/15 mt-3 mb-1 text-left hidden transition-all duration-300 shadow-xl">
             <!-- Audio Waveform Canvas Header Guide -->
-            <div class="flex justify-between items-center mb-2 px-1">
+            <div class="flex justify-between items-center mb-1.5 px-1">
                 <span class="text-[10px] font-bold text-amber-400 flex items-center gap-1">
                     📊 음성 분석 파형
                 </span>
-                <span class="text-[10px] text-gray-400 bg-white/10 px-2 py-0.5 rounded border border-white/10">
-                    💡 마우스 드래그로 구간 자르기 지원
+                <span class="text-[9px] text-gray-400 bg-white/10 px-2 py-0.5 rounded border border-white/10">
+                    💡 마우스 드래그 구간 자르기 지원
                 </span>
             </div>
 
-            <!-- Audio Waveform Canvas -->
+            <!-- Audio Waveform Canvas (컴팩트 높이) -->
             <div class="relative w-full">
-                <canvas id="waveformCanvas" class="w-full h-24 bg-black/90 rounded-lg border border-white/10 block cursor-crosshair shadow-inner"></canvas>
+                <canvas id="waveformCanvas" class="w-full h-14 bg-black/90 rounded-lg border border-white/10 block cursor-crosshair shadow-inner"></canvas>
             </div>
             
             <!-- Live Volume Meter Bar -->
-            <div class="w-full bg-gray-800/80 h-2 rounded-full mt-3 overflow-hidden border border-white/5">
+            <div class="w-full bg-gray-800/80 h-1.5 rounded-full mt-2 overflow-hidden border border-white/5">
                 <div id="volumeBar" class="bg-gradient-to-r from-emerald-500 via-amber-500 to-red-500 h-full w-0 transition-all duration-75"></div>
             </div>
         </div>
 
-        <!-- 타이머 및 컨트롤 버튼 영역 -->
-        <div class="mt-6 md:mt-8 flex flex-col items-center justify-center">
+        <!-- 타이머 및 컨트롤 버튼 영역 (고정 위치 보존 마진 컴팩트화) -->
+        <div class="mt-4 md:mt-5 flex flex-col items-center justify-center">
             
             <!-- 스톱워치 타이머 (00:00부터 카운트업) -->
-            <div id="timer" class="text-5xl md:text-7xl font-black font-mono-timer tracking-wider text-white mb-4 md:mb-6 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+            <div id="timer" class="text-4xl md:text-6xl font-black font-mono-timer tracking-wider text-white mb-3 md:mb-4 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
                 00:00
             </div>
 
@@ -916,8 +916,8 @@
                     waveformContainer.classList.remove('hidden');
                 }
 
-                // 🚨 시작 시 20초 ~ 40초 사이 무작위 돌발시간 예약
-                objectionTriggerTime = Math.floor(Math.random() * 21) + 20; 
+                // 🚨 시작 시 1분 ~ 2분 사이 (60초 ~ 120초) 무작위 돌발시간 예약
+                objectionTriggerTime = Math.floor(Math.random() * 61) + 60; 
 
                 setControlState('running');
                 document.getElementById('statusMsg').innerText = recordMode === 'screen' ? "📹 화면 녹화 & 마이크 녹음 진행 중입니다..." : "🎙️ 마이크 녹음 진행 중입니다...";
@@ -1430,6 +1430,25 @@
             clearWaveformCanvas();
             document.getElementById('volumeBar').style.width = "0%";
             document.getElementById('statusMsg').innerText = "'시작' 버튼을 누르면 타이머 측정 및 녹음/녹화가 시작됩니다.";
+        }
+
+        // 🚨 돌발질문 팝업 모달 발동 함수
+        function triggerObjectionModal() {
+            isObjectionTriggered = true;
+            const modal = document.getElementById('objectionModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                // 팝업 경보 효과음 (경고 시그널 음성 재생)
+                speakText("돌발 질문이 들어왔습니다!");
+            }
+        }
+
+        // 🚨 돌발질문 팝업 모달 닫기 함수
+        function closeObjectionModal() {
+            const modal = document.getElementById('objectionModal');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
         }
 
         function updateTimerDisplay() {
