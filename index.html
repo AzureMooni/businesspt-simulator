@@ -1823,14 +1823,43 @@
             window.addEventListener('touchend', stopDrag);
         }
 
-        // 음성합성 (TTS)
+        // 음성합성 (TTS) - 고품질 프리미엄 한국어 보이스 선택 및 톤 조율
         function speakText(text) {
             if ('speechSynthesis' in window) {
+                // 기존 대기 중인 음성 취소
+                window.speechSynthesis.cancel();
+
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'ko-KR';
-                utterance.rate = 0.9;
+                utterance.rate = 1.0;  // 부드럽고 수평적인 속도
+                utterance.pitch = 1.0; // 자연스러운 어조
+
+                // 시스템에 탑재된 최상급 자연스러운 한국어 보이스 자동 탐색 (Yuna, Heami, Google 한국어 등)
+                const voices = window.speechSynthesis.getVoices();
+                const premiumKoreanVoice = voices.find(v => 
+                    v.lang.startsWith('ko') && (
+                        v.name.includes('Yuna') || 
+                        v.name.includes('Heami') || 
+                        v.name.includes('Google') || 
+                        v.name.includes('Premium') ||
+                        v.name.includes('Enhanced') ||
+                        v.name.includes('Natural')
+                    )
+                ) || voices.find(v => v.lang.startsWith('ko'));
+
+                if (premiumKoreanVoice) {
+                    utterance.voice = premiumKoreanVoice;
+                }
+
                 window.speechSynthesis.speak(utterance);
             }
+        }
+
+        // 보이스 목록 비동기 로딩 대응
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                window.speechSynthesis.getVoices();
+            };
         }
 
         // 버튼 클릭 시 수동 전체 다운로드 실행 함수
