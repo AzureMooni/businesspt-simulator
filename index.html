@@ -198,29 +198,38 @@
             <!-- 🎯 원클릭 시뮬레이션 모드 선택 (Presets) -->
             <div class="space-y-2 pt-1 border-t border-white/10">
                 <label class="text-xs font-bold text-amber-400 block mb-1">🎯 시뮬레이션 모드 선택 (원클릭 세팅)</label>
-                
-                <!-- 모드 1: 실전 테스트 모드 -->
-                <button id="presetRealBtn" onclick="applyPresetMode('real')" class="w-full p-2.5 rounded-xl border text-left transition flex items-center justify-between bg-red-950/40 border-red-500/50 hover:bg-red-900/40">
+
+                <!-- 모드 1: 🔥 실전 비디오 하드 모드 (Hard) -->
+                <button id="presetHardBtn" onclick="applyPresetMode('hard')" class="w-full p-2.5 rounded-xl border text-left transition flex items-center justify-between bg-red-950/50 border-red-500/60 hover:bg-red-900/50 shadow-md">
                     <div>
-                        <div class="text-xs font-extrabold text-red-300 flex items-center gap-1">⚡ 1. 실전 긴급 테스트 모드</div>
+                        <div class="text-xs font-black text-red-400 flex items-center gap-1">🔥 1. 실전 비디오 하드 모드 (HARD)</div>
+                        <div class="text-[10px] text-red-200/80 mt-0.5 font-medium">👥 실전 비디오 + ⚡ 돌발 팝업&카드 + 🎙️ 음성 녹음</div>
+                    </div>
+                    <span id="presetHardCheck" class="text-xs text-red-400 font-bold">✓</span>
+                </button>
+                
+                <!-- 모드 2: 내 카메라 셀프 테스트 모드 -->
+                <button id="presetRealBtn" onclick="applyPresetMode('real')" class="w-full p-2.5 rounded-xl border text-left transition flex items-center justify-between bg-surface-alt border-white/10 hover:bg-white/10">
+                    <div>
+                        <div class="text-xs font-extrabold text-amber-300 flex items-center gap-1">📷 2. 내 카메라 셀프 모드</div>
                         <div class="text-[10px] text-gray-400 mt-0.5">🚨 돌발 팝업 + 📷 내 카메라 + 🎙️ 음성 녹음</div>
                     </div>
-                    <span id="presetRealCheck" class="text-xs text-red-400 font-bold">✓</span>
+                    <span id="presetRealCheck" class="text-xs text-amber-400 font-bold hidden">✓</span>
                 </button>
 
-                <!-- 모드 2: 화면 녹화 피드백 모드 -->
+                <!-- 모드 3: 화면 녹화 피드백 모드 -->
                 <button id="presetScreenBtn" onclick="applyPresetMode('screen')" class="w-full p-2.5 rounded-xl border text-left transition flex items-center justify-between bg-surface-alt border-white/10 hover:bg-white/10">
                     <div>
-                        <div class="text-xs font-extrabold text-purple-300 flex items-center gap-1">📹 2. 숏폼 / 화면 녹화 모드</div>
+                        <div class="text-xs font-extrabold text-purple-300 flex items-center gap-1">📹 3. 숏폼 / 화면 녹화 모드</div>
                         <div class="text-[10px] text-gray-400 mt-0.5">🚫 돌발 Off + ⚫ 검은 배경 + 📹 화면/음성 녹화</div>
                     </div>
                     <span id="presetScreenCheck" class="text-xs text-purple-400 font-bold hidden">✓</span>
                 </button>
 
-                <!-- 모드 3: 라이트 기본 연습 모드 -->
+                <!-- 모드 4: 라이트 기본 연습 모드 -->
                 <button id="presetBasicBtn" onclick="applyPresetMode('basic')" class="w-full p-2.5 rounded-xl border text-left transition flex items-center justify-between bg-surface-alt border-white/10 hover:bg-white/10">
                     <div>
-                        <div class="text-xs font-extrabold text-emerald-300 flex items-center gap-1">☕ 3. 라이트 기본 연습 모드</div>
+                        <div class="text-xs font-extrabold text-emerald-300 flex items-center gap-1">☕ 4. 라이트 기본 연습 모드</div>
                         <div class="text-[10px] text-gray-400 mt-0.5">🚨 돌발 팝업 + ⚫ 검은 배경 + 🎙️ 음성 녹음</div>
                     </div>
                     <span id="presetBasicCheck" class="text-xs text-emerald-400 font-bold hidden">✓</span>
@@ -1174,40 +1183,50 @@
             }
         }
 
-        // 🎯 원클릭 모드 프리셋 적용 (real, screen, basic)
+        // 🎯 원클릭 모드 프리셋 적용 (hard, real, screen, basic)
         function applyPresetMode(modeType) {
             const objectionSelect = document.getElementById('objectionModeSelect');
             const bgSelect = document.getElementById('bgSelect');
             const recordSelect = document.getElementById('recordModeSelect');
 
+            const btnHard = document.getElementById('presetHardBtn');
             const btnReal = document.getElementById('presetRealBtn');
             const btnScreen = document.getElementById('presetScreenBtn');
             const btnBasic = document.getElementById('presetBasicBtn');
 
+            const checkHard = document.getElementById('presetHardCheck');
             const checkReal = document.getElementById('presetRealCheck');
             const checkScreen = document.getElementById('presetScreenCheck');
             const checkBasic = document.getElementById('presetBasicCheck');
 
             // 스타일 초기화
-            [btnReal, btnScreen, btnBasic].forEach(b => {
+            [btnHard, btnReal, btnScreen, btnBasic].forEach(b => {
                 if (b) {
                     b.className = "w-full p-2.5 rounded-xl border text-left transition flex items-center justify-between bg-surface-alt border-white/10 hover:bg-white/10";
                 }
             });
-            [checkReal, checkScreen, checkBasic].forEach(c => {
+            [checkHard, checkReal, checkScreen, checkBasic].forEach(c => {
                 if (c) c.classList.add('hidden');
             });
 
-            if (modeType === 'real') {
-                // 1. 실전 긴급 테스트 모드 (돌발 팝업 + 카메라 거울모드 + 마이크 녹음)
+            if (modeType === 'hard') {
+                // 1. 🔥 실전 비디오 하드 모드 (HARD) (실전 비디오 + 돌발 팝업&카드 + 마이크 녹음)
+                if (objectionSelect) objectionSelect.value = 'both';
+                if (bgSelect) bgSelect.value = 'video';
+                if (recordSelect) recordSelect.value = 'audio';
+
+                if (btnHard) btnHard.className = "w-full p-2.5 rounded-xl border text-left transition flex items-center justify-between bg-red-950/50 border-red-500/60 hover:bg-red-900/50 shadow-md";
+                if (checkHard) checkHard.classList.remove('hidden');
+            } else if (modeType === 'real') {
+                // 2. 내 카메라 셀프 모드 (돌발 팝업 + 내 카메라 + 마이크 녹음)
                 if (objectionSelect) objectionSelect.value = 'popup';
                 if (bgSelect) bgSelect.value = 'camera';
                 if (recordSelect) recordSelect.value = 'audio';
 
-                if (btnReal) btnReal.className = "w-full p-2.5 rounded-xl border text-left transition flex items-center justify-between bg-red-950/40 border-red-500/50 hover:bg-red-900/40";
+                if (btnReal) btnReal.className = "w-full p-2.5 rounded-xl border text-left transition flex items-center justify-between bg-amber-950/40 border-amber-500/50 hover:bg-amber-900/40";
                 if (checkReal) checkReal.classList.remove('hidden');
             } else if (modeType === 'screen') {
-                // 2. 숏폼 / 화면 녹화 피드백 모드 (돌발 Off + 검은 배경 + 화면/음성 녹화)
+                // 3. 숏폼 / 화면 녹화 피드백 모드 (돌발 Off + 검은 배경 + 화면/음성 녹화)
                 if (objectionSelect) objectionSelect.value = 'off';
                 if (bgSelect) bgSelect.value = 'none';
                 if (recordSelect) recordSelect.value = 'screen';
@@ -1215,7 +1234,7 @@
                 if (btnScreen) btnScreen.className = "w-full p-2.5 rounded-xl border text-left transition flex items-center justify-between bg-purple-950/40 border-purple-500/50 hover:bg-purple-900/40";
                 if (checkScreen) checkScreen.classList.remove('hidden');
             } else if (modeType === 'basic') {
-                // 3. 라이트 기본 연습 모드 (돌발 팝업 + 검은 배경 + 마이크 녹음)
+                // 4. 라이트 기본 연습 모드 (돌발 팝업 + 검은 배경 + 마이크 녹음)
                 if (objectionSelect) objectionSelect.value = 'popup';
                 if (bgSelect) bgSelect.value = 'none';
                 if (recordSelect) recordSelect.value = 'audio';
