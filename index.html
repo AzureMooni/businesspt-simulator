@@ -101,11 +101,11 @@
 
     <!-- 상단 헤더 (심플 스마트 뷰 모드) -->
     <header id="mainHeader" class="w-full max-w-4xl flex justify-between items-center z-10 mb-4 px-2">
-        <!-- 타이틀 -->
-        <h1 class="text-sm sm:text-base md:text-lg font-black tracking-wider text-red-500 uppercase flex items-center gap-2 whitespace-nowrap">
-            <span id="recordingIndicator" class="inline-block w-2.5 h-2.5 bg-gray-500 rounded-full"></span>
+        <!-- 타이틀 (홈 리셋 버튼 역할) -->
+        <button onclick="goHome()" class="text-sm sm:text-base md:text-lg font-black tracking-wider text-red-500 uppercase flex items-center gap-2 whitespace-nowrap hover:text-red-400 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group" title="홈으로 이동 (새 시뮬레이션 뽑기 & UI 원복)">
+            <span id="recordingIndicator" class="inline-block w-2.5 h-2.5 bg-gray-500 rounded-full group-hover:bg-red-400 transition"></span>
             🎯 BPT 교육생 실전 시뮬레이터
-        </h1>
+        </button>
         
         <!-- 헤더 미니멀 버튼 그룹 -->
         <div class="flex items-center gap-2">
@@ -1084,6 +1084,18 @@
                 document.body.removeChild(a);
                 window.URL.revokeObjectURL(url);
             }, 100);
+        }
+
+        // 🏠 홈 리셋 버튼 클릭 함수
+        function goHome() {
+            // 녹음 중이면 안전하게 정지
+            if (isRunning) {
+                stopSimulation();
+            }
+            // UI 카드 창 원복 (숨겨져 있었다면 보이기)
+            setCardVisibility(false);
+            // 새 시뮬레이션 뽑기
+            drawNewSimulation();
         }
 
         // 무작위 항목 뽑기
