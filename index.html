@@ -92,6 +92,12 @@
         
         <!-- 헤더 미니멀 버튼 그룹 -->
         <div class="flex items-center gap-2">
+            <!-- ✨ What's New 업데이트 공지 버튼 -->
+            <button onclick="toggleWhatsNewModal()" class="relative bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs px-2.5 py-1.5 rounded-lg border border-amber-500/40 transition whitespace-nowrap font-bold flex items-center gap-1 shadow-sm">
+                <span id="whatsNewBadge" class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                ✨ What's New
+            </button>
+
             <!-- 🚀 12기 커뮤니티 이동 버튼 -->
             <a href="https://12th-bpt-training.vercel.app/" target="_blank" rel="noopener noreferrer" class="relative group bg-red-950/80 hover:bg-red-900/90 text-red-200 text-xs px-3 py-1.5 rounded-lg border border-red-500/40 transition whitespace-nowrap font-bold flex items-center gap-1.5 shadow-md">
                 <span class="relative flex h-2 w-2">
@@ -112,6 +118,47 @@
             </button>
         </div>
     </header>
+
+    <!-- ✨ What's New 업데이트 공지 모달 오버레이 -->
+    <div id="whatsNewModal" onclick="if(event.target===this) toggleWhatsNewModal()" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 hidden flex items-center justify-center transition-all">
+        <div class="glass-card bg-neutral-900 border border-amber-500/30 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl text-left space-y-4 max-h-[85vh] flex flex-col">
+            <div class="flex justify-between items-center border-b border-white/10 pb-3 shrink-0">
+                <div class="flex items-center gap-2">
+                    <span class="bg-amber-500/20 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded border border-amber-500/30">v1.2</span>
+                    <h3 class="text-base font-bold text-white flex items-center gap-1.5">✨ 최신 업데이트 소식</h3>
+                </div>
+                <button onclick="toggleWhatsNewModal()" class="text-gray-400 hover:text-white text-lg font-bold">✕</button>
+            </div>
+
+            <div class="space-y-3 overflow-y-auto pr-1 flex-1 text-xs leading-relaxed text-gray-300">
+                <div class="bg-white/5 rounded-xl p-3 border border-white/10 space-y-1">
+                    <div class="font-extrabold text-amber-300 flex items-center gap-1">🌐 12기 Vercel 커뮤니티 실시간 DB 연동</div>
+                    <p class="text-gray-400 text-[11px]">12기 수강생들이 등록해둔 최신 돌발질문들이 시뮬레이터에 실시간으로 출제됩니다!</p>
+                </div>
+
+                <div class="bg-white/5 rounded-xl p-3 border border-white/10 space-y-1">
+                    <div class="font-extrabold text-emerald-300 flex items-center gap-1">📌 주차 및 세부 과제 직접 선택</div>
+                    <p class="text-gray-400 text-[11px]">연습하고 싶은 특정 주차(0~4주차)와 세부 항목을 수동으로 선택해 맞춤 연습 가능!</p>
+                </div>
+
+                <div class="bg-white/5 rounded-xl p-3 border border-white/10 space-y-1">
+                    <div class="font-extrabold text-purple-300 flex items-center gap-1">🎯 3가지 원클릭 모드 프리셋</div>
+                    <p class="text-gray-400 text-[11px]">실전 테스트, 숏폼/화면 녹화, 라이트 연습 중 원하는 훈련 모드를 원클릭으로 세팅!</p>
+                </div>
+
+                <div class="bg-white/5 rounded-xl p-3 border border-white/10 space-y-1">
+                    <div class="font-extrabold text-red-300 flex items-center gap-1">✂️ 파형 드래그 자르기 & WAV 다운로드</div>
+                    <p class="text-gray-400 text-[11px]">시뮬레이션 후 마우스 드래그로 원하는 구간만 선택해 `.wav` 음성 파일로 다운로드 지원.</p>
+                </div>
+            </div>
+
+            <div class="pt-2 border-t border-white/10 shrink-0">
+                <button onclick="toggleWhatsNewModal()" class="w-full bg-amber-500 hover:bg-amber-600 text-black font-extrabold text-xs py-2.5 rounded-lg transition shadow-md">
+                    확인했습니다 👍
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- ⚙️ 환경 설정 팝업 모달 오버레이 -->
     <div id="settingsModal" onclick="if(event.target===this) toggleSettingsModal()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center transition-all">
@@ -1066,6 +1113,32 @@
             }
         }
 
+        // ✨ What's New 업데이트 공지 모달 토글
+        const LATEST_VERSION = "v1.2";
+
+        function toggleWhatsNewModal() {
+            const modal = document.getElementById('whatsNewModal');
+            if (modal) {
+                modal.classList.toggle('hidden');
+                // 모달을 열거나 닫을 때 최신 버전 읽음 처리
+                localStorage.setItem('read_bpt_version', LATEST_VERSION);
+                const badge = document.getElementById('whatsNewBadge');
+                if (badge) badge.classList.add('hidden');
+            }
+        }
+
+        function checkWhatsNewBadge() {
+            const readVersion = localStorage.getItem('read_bpt_version');
+            const badge = document.getElementById('whatsNewBadge');
+            if (badge) {
+                if (readVersion === LATEST_VERSION) {
+                    badge.classList.add('hidden');
+                } else {
+                    badge.classList.remove('hidden');
+                }
+            }
+        }
+
         // ⚙️ 환경 설정 팝업 모달 토글
         function toggleSettingsModal() {
             const modal = document.getElementById('settingsModal');
@@ -1880,6 +1953,7 @@
 
         // 페이지 로드 시 초기 세팅
         window.onload = () => {
+            checkWhatsNewBadge(); // 최신 업데이트 읽음 뱃지 확인
             syncLiveObjections(); // 12기 커뮤니티 Supabase 라이브 돌발질문 동기화
             drawNewSimulation();
             changeBackground(); // 디폴트 배경인 'none'(검은 화면) 세팅
