@@ -93,7 +93,11 @@
         <!-- 헤더 미니멀 버튼 그룹 -->
         <div class="flex items-center gap-2">
             <!-- 🚀 12기 커뮤니티 이동 버튼 -->
-            <a href="https://12th-bpt-training.vercel.app/" target="_blank" rel="noopener noreferrer" class="bg-red-950/80 hover:bg-red-900/90 text-red-200 text-xs px-3 py-1.5 rounded-lg border border-red-500/40 transition whitespace-nowrap font-bold flex items-center gap-1">
+            <a href="https://12th-bpt-training.vercel.app/" target="_blank" rel="noopener noreferrer" class="relative group bg-red-950/80 hover:bg-red-900/90 text-red-200 text-xs px-3 py-1.5 rounded-lg border border-red-500/40 transition whitespace-nowrap font-bold flex items-center gap-1.5 shadow-md">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                </span>
                 🚀 12기 커뮤니티
             </a>
 
@@ -110,7 +114,7 @@
     </header>
 
     <!-- ⚙️ 환경 설정 팝업 모달 오버레이 -->
-    <div id="settingsModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center transition-all">
+    <div id="settingsModal" onclick="if(event.target===this) toggleSettingsModal()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center transition-all">
         <div class="glass-card bg-neutral-900 border border-white/20 rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl text-left space-y-4">
             <div class="flex justify-between items-center border-b border-white/10 pb-3">
                 <h3 class="text-base font-bold text-white flex items-center gap-1.5">⚙️ 환경 설정</h3>
@@ -215,7 +219,7 @@
     </div>
 
     <!-- 📌 주차 및 세부 과제 수동 선택 모달 -->
-    <div id="taskSelectModal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 hidden flex items-center justify-center transition-all">
+    <div id="taskSelectModal" onclick="if(event.target===this) toggleTaskSelectModal()" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 hidden flex items-center justify-center transition-all">
         <div class="glass-card bg-neutral-900 border border-white/20 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl text-left space-y-4 max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center border-b border-white/10 pb-3 shrink-0">
                 <h3 class="text-base font-bold text-white flex items-center gap-1.5">📌 주차 및 과제 선택</h3>
@@ -791,6 +795,12 @@
                 setControlState('running');
                 document.getElementById('statusMsg').innerText = recordMode === 'screen' ? "📹 화면 녹화 & 마이크 녹음 진행 중입니다..." : "🎙️ 마이크 녹음 진행 중입니다...";
 
+                // REC 뱃지 레드 블링크 시각적 효과 적용
+                const recDot = document.getElementById('recordingIndicator');
+                if (recDot) {
+                    recDot.className = "inline-block w-3 h-3 bg-red-500 rounded-full animate-ping";
+                }
+
                 timerInterval = setInterval(() => {
                     elapsedTime++;
                     updateTimerDisplay();
@@ -1234,6 +1244,12 @@
             const waveformContainer = document.getElementById('waveformContainer');
             if (waveformContainer) {
                 waveformContainer.classList.add('hidden');
+            }
+
+            // REC 뱃지 초기화
+            const recDot = document.getElementById('recordingIndicator');
+            if (recDot) {
+                recDot.className = "inline-block w-2.5 h-2.5 bg-gray-500 rounded-full";
             }
 
             updateTimerDisplay();
