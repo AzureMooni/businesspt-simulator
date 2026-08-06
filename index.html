@@ -1361,72 +1361,7 @@
             }
         }
 
-        // [시작] 버튼 동작
-        async function startSimulation() {
-            if (isRunning) return;
 
-            // 정지 후 이전 녹음 데이터가 존재하는 상태에서 다시 '시작'을 누르는 경우 덮어쓰기 안내 확인
-            if (recordedAudioBlob) {
-                const confirmOverwrite = confirm("이전 시뮬레이션의 녹음 데이터가 있습니다. 새로운 녹음을 시작하면 이전 녹음 및 파형이 초기화됩니다. 계속 진행하시겠습니까?");
-                if (!confirmOverwrite) return;
-                resetTimer();
-            }
-
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                mediaRecorder = new MediaRecorder(stream);
-                audioChunks = [];
-
-                mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
-                mediaRecorder.onstop = () => {
-                    recordedAudioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                };
-
-                mediaRecorder.start();
-
-                // Web Audio API 분석 노드 연결
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const source = audioCtx.createMediaStreamSource(stream);
-                analyser = audioCtx.createAnalyser();
-                analyser.fftSize = 512;
-                source.connect(analyser);
-
-                isRunning = true;
-                isPaused = false;
-                isObjectionTriggered = false;
-                volumeHistory = [];
-
-                // 스마트 뷰: 녹음 시작 시 파형 컨테이너 슬라이드 노출
-                const waveformContainer = document.getElementById('waveformContainer');
-                if (waveformContainer) {
-                    waveformContainer.classList.remove('hidden');
-                }
-
-                // 🚨 시작 시 20초 ~ 40초 사이 무작위 돌발시간 예약
-                objectionTriggerTime = Math.floor(Math.random() * 21) + 20; 
-
-                setControlState('running');
-                document.getElementById('statusMsg').innerText = "🎙️ 녹음 및 진행 시간 측정 중입니다...";
-
-                timerInterval = setInterval(() => {
-                    elapsedTime++;
-                    updateTimerDisplay();
-
-                    const objectionMode = document.getElementById('objectionModeSelect').value;
-
-                    // 🚨 팝업이 포함된 모드 (popup, both)일 때만 예약 시간에 팝업 발동!
-                    if ((objectionMode === 'popup' || objectionMode === 'both') && elapsedTime === objectionTriggerTime && !isObjectionTriggered) {
-                        triggerObjectionModal();
-                    }
-                }, 1000);
-
-                // 루프 시작: 데시벨 미터 & 실시간 파형 그리기
-                visualizeAudio();
-
-            } catch (err) {
-                alert("마이크 접근 권한이 필요합니다. 마이크 허용 후 다시 시도해 주세요.");
-            }
-        }
 
         // 실시간 음성 데시벨 및 파형 시각화 루프
         function visualizeAudio() {
