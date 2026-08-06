@@ -284,30 +284,6 @@
                         </label>
                     </div>
                 </div>
-            </div>s="bg-neutral-900">⚫ 배경 없음 (검은 화면)</option>
-                            <option value="camera" class="bg-neutral-900">📷 내 카메라 (거울 모드)</option>
-                            <option value="video" class="bg-neutral-900">👥 실전 시뮬레이션 (비디오)</option>
-                        </select>
-                    </div>
-
-                    <!-- 3. 화면 녹화 옵션 설정 -->
-                    <div class="space-y-1">
-                        <label class="text-[11px] font-semibold text-gray-300">🎥 녹화 방식 (화면/음성)</label>
-                        <select id="recordModeSelect" class="w-full bg-black/60 text-xs text-white border border-white/20 p-2 rounded-lg outline-none cursor-pointer">
-                            <option value="audio" class="bg-neutral-900" selected>🎙️ 마이크 음성 녹음만</option>
-                            <option value="screen" class="bg-neutral-900">📹 브라우저/전체 화면 녹화 + 음성</option>
-                        </select>
-                    </div>
-
-                    <!-- 4. UI 가시성 토글 -->
-                    <div class="pt-1 flex justify-between items-center">
-                        <span class="text-[11px] font-semibold text-gray-300">UI 전체 보이기</span>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="toggleCardCheckbox" checked onchange="toggleCardVisibility()" class="sr-only peer">
-                            <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-red-600"></div>
-                        </label>
-                    </div>
-                </div>
             </div>
 
             <button onclick="toggleSettingsModal()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-xs py-2.5 rounded-lg mt-2 transition">
