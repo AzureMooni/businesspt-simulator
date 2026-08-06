@@ -732,7 +732,20 @@
         let liveObjectionsMap = {}; // 주차별 라이브 돌발질문 맵 { '0': [...], '1': [...] }
         let isLiveSynced = false;
 
-        // Vercel Supabase 커뮤니티 DB에서 최신 회원 돌발질문 비동기 동기화 (오프라인/에러 시 로컬 하드코딩 유지)
+        // 두 문장 간 자카드(Jaccard) 단어 세트 유사도 연산 (0.0 ~ 1.0)
+        function calculateSimilarity(text1, text2) {
+            const clean1 = text1.replace(/[^가-힣a-zA-Z0-9\s]/g, '').trim();
+            const clean2 = text2.replace(/[^가-힣a-zA-Z0-9\s]/g, '').trim();
+            const words1 = new Set(clean1.split(/\s+/).filter(w => w.length > 0));
+            const words2 = new Set(clean2.split(/\s+/).filter(w => w.length > 0));
+            if (words1.size === 0 || words2.size === 0) return 0;
+            
+            const intersection = new Set([...words1].filter(x => words2.has(x)));
+            const union = new Set([...words1, ...words2]);
+            return intersection.size / union.size;
+        }
+
+        // Vercel Supabase 커뮤니티 DB에서 최신 회원 돌발질문 비동기 동기화 (자동 정제 및 중복/유사 알고리즘 통합)
         async function syncLiveObjections() {
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/questions?category=eq.unexpected&select=id,title,tags`, {
@@ -750,7 +763,9 @@
                 const tempMap = {};
                 questions.forEach(q => {
                     if (!q.title || typeof q.title !== 'string') return;
-                    
+                    const cleanTitle = q.title.trim();
+                    if (cleanTitle.length < 5) return; // 5자 미만 미의미 데이터 스킵
+
                     // 주차 태그 추출 (예: 'w:0', 'w:1' -> '0', '1')
                     let weekNum = "0";
                     if (Array.isArray(q.tags)) {
@@ -759,12 +774,20 @@
                     }
 
                     if (!tempMap[weekNum]) tempMap[weekNum] = [];
-                    tempMap[weekNum].push(q.title.trim());
+                    
+                    // 1단계: 완전 동일 중복 검사
+                    if (tempMap[weekNum].includes(cleanTitle)) return;
+
+                    // 2단계: 기존 리스트와 어휘 유사도(Jaccard > 0.65) 검사하여 비슷한 돌발질문 자동 통합/필터링
+                    const isSimilar = tempMap[weekNum].some(existing => calculateSimilarity(existing, cleanTitle) > 0.65);
+                    if (!isSimilar) {
+                        tempMap[weekNum].push(cleanTitle);
+                    }
                 });
 
                 liveObjectionsMap = tempMap;
                 isLiveSynced = true;
-                console.log("✅ 12기 커뮤니티 최신 돌발질문 동기화 완료:", liveObjectionsMap);
+                console.log("✅ 12기 커뮤니티 돌발질문 동기화 및 자동 정제/중복필터링 완료:", liveObjectionsMap);
             } catch (err) {
                 console.warn("⚠️ 12기 커뮤니티 DB 동기화 실패 (로컬 데이터로 안전 서빙):", err);
             }
