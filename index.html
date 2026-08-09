@@ -425,19 +425,19 @@
 
             <!-- 탭 1: 프로필 & 환경 -->
             <div id="pTabContent1" class="persona-tab-content grid grid-cols-2 md:grid-cols-4 gap-3 pt-1">
-                <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-white/20 shadow-md">
                     <div class="text-xs font-bold text-gray-400 mb-1">👤 성별 & 직업</div>
                     <div id="p1_job" class="text-sm md:text-base font-extrabold text-amber-200 leading-snug">-</div>
                 </div>
-                <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-white/20 shadow-md">
                     <div class="text-xs font-bold text-gray-400 mb-1">🎓 전공 & 이전 직업</div>
                     <div id="p1_edu" class="text-sm md:text-base font-extrabold text-amber-200 leading-snug">-</div>
                 </div>
-                <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-white/20 shadow-md">
                     <div class="text-xs font-bold text-gray-400 mb-1">🚫 겸직 금지 유무</div>
                     <div id="p1_dual" class="text-sm md:text-base font-extrabold text-amber-200 leading-snug">-</div>
                 </div>
-                <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-white/20 shadow-md">
                     <div class="text-xs font-bold text-gray-400 mb-1">📷 얼굴 노출 여부</div>
                     <div id="p1_face" class="text-sm md:text-base font-extrabold text-amber-200 leading-snug">-</div>
                 </div>
@@ -446,22 +446,22 @@
             <!-- 탭 2: 목표 & 아이템 -->
             <div id="pTabContent2" class="persona-tab-content hidden space-y-3 pt-1">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                    <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-white/20 shadow-md">
                         <div class="text-xs font-bold text-emerald-400 mb-1">💰 목표 매출 & 예상 기간</div>
                         <div id="p2_revenue" class="text-sm md:text-base font-extrabold text-emerald-200 leading-snug">-</div>
                     </div>
-                    <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                    <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-white/20 shadow-md">
                         <div class="text-xs font-bold text-emerald-400 mb-1">🛒 희망 상품 / 서비스</div>
                         <div id="p2_item" class="text-sm md:text-base font-extrabold text-emerald-200 leading-snug">-</div>
                     </div>
-                    <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                    <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-white/20 shadow-md">
                         <div class="text-xs font-bold text-emerald-400 mb-1">💡 아이템 선정 이유 / 가격대</div>
                         <div id="p2_reason" class="text-xs md:text-sm font-bold text-emerald-100 leading-relaxed">-</div>
                     </div>
                 </div>
 
                 <!-- 🎲 2주차 시뮬레이션 시 케이스별 무작위 10가지 후보 아이템 목록 -->
-                <div id="p2_itemPoolContainer" class="bg-emerald-950/40 p-3.5 rounded-xl border border-emerald-500/30 hidden">
+                <div id="p2_itemPoolContainer" class="bg-emerald-950/60 p-3.5 rounded-xl border border-emerald-500/40 shadow-md hidden">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-xs md:text-sm font-black text-emerald-300 flex items-center gap-1.5">
                             🎲 [2주차 시장성 검증용] 이번 테스트 무작위 제공 아이템 10선
@@ -478,16 +478,16 @@
 
             <!-- 탭 3: 선호 유튜브 & 라이프스타일 -->
             <div id="pTabContent3" class="persona-tab-content hidden space-y-3 pt-1">
-                <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-white/20 shadow-md">
                     <div class="text-xs font-bold text-purple-300 mb-1">📺 즐겨보는 유튜브 채널 5선</div>
                     <div id="p3_youtube" class="text-xs md:text-sm font-medium text-purple-100 leading-relaxed space-y-1.5">-</div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                    <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-white/20 shadow-md">
                         <div class="text-xs font-bold text-purple-300 mb-1">⏳ 가장 많이 쓰는 시간/돈 (취미/특기)</div>
                         <div id="p3_hobby" class="text-xs md:text-sm font-bold text-purple-200 leading-snug">-</div>
                     </div>
-                    <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                    <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-white/20 shadow-md">
                         <div class="text-xs font-bold text-purple-300 mb-1">🛍️ 판매 / 오프라인 모임 경험</div>
                         <div id="p3_exp" class="text-xs md:text-sm font-bold text-purple-200 leading-snug">-</div>
                     </div>
@@ -496,15 +496,15 @@
 
             <!-- 탭 4: 동기부여 & 소통 성향 -->
             <div id="pTabContent4" class="persona-tab-content hidden grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
-                <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-white/20 shadow-md">
                     <div class="text-xs font-bold text-amber-400 mb-1">🔥 동기부여 유발 상황</div>
                     <div id="p4_motive" class="text-xs md:text-sm font-bold text-amber-200 leading-relaxed">-</div>
                 </div>
-                <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-white/20 shadow-md">
                     <div class="text-xs font-bold text-amber-400 mb-1">🏆 최고 성취감 느끼는 순간</div>
                     <div id="p4_achieve" class="text-xs md:text-sm font-bold text-amber-200 leading-relaxed">-</div>
                 </div>
-                <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                <div class="bg-neutral-900/80 p-3.5 rounded-xl border border-white/20 shadow-md">
                     <div class="text-xs font-bold text-amber-400 mb-1">🗣️ 선호 의사소통 방식</div>
                     <div id="p4_comm" class="text-sm md:text-base font-extrabold text-amber-300 leading-snug">-</div>
                 </div>
