@@ -394,13 +394,14 @@
 
         <!-- 무작위 회원 페르소나 (방안 1: 탭 4분할 카테고리 구조) -->
         <div class="bg-black/60 rounded-2xl p-4 md:p-5 text-left border border-white/15 shadow-2xl space-y-4">
-            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
-                <div class="flex items-center gap-2">
-                    <span class="text-xs md:text-sm font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-                        👤 실전 수강생 페르소나 리포트
+            <!-- 페르소나 헤더 영역 (모바일 줄바꿈 방지 및 콤팩트 레이아웃) -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-white/10 pb-3">
+                <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                    <span class="text-xs sm:text-sm font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5 whitespace-nowrap">
+                        👤 수강생 페르소나
                     </span>
-                    <span id="personaCategoryBadge" class="text-xs bg-amber-500/20 text-amber-300 font-extrabold px-3 py-1 rounded-full border border-amber-500/30">
-                        케이스 1번 (회사원)
+                    <span id="personaCategoryBadge" class="text-xs bg-amber-500/20 text-amber-300 font-extrabold px-2.5 py-0.5 rounded-full border border-amber-500/30 whitespace-nowrap">
+                        케이스 1 (회사원)
                     </span>
                 </div>
 
@@ -768,7 +769,7 @@
         // 구글 시트 기반 12기 수강생 6개 실전 페르소나 데이터 (30여 개 전체 설문 항목 + 2주차 무작위 10개 후보 아이템 풀 포함)
         const personas = [
             {
-                caseName: "케이스 1번 (회사원)",
+                caseName: "케이스 1. 회사원",
                 // 1. 프로필 & 환경
                 gender: "여성",
                 job: "회사원 (경영 전공)",
@@ -833,7 +834,7 @@
                 ]
             },
             {
-                caseName: "케이스 2번 (전업주부)",
+                caseName: "케이스 2. 전업주부",
                 // 1. 프로필 & 환경
                 gender: "여성",
                 job: "주부 (중국어학과, 항공과 학사)",
@@ -898,7 +899,7 @@
                 ]
             },
             {
-                caseName: "케이스 3번 (투잡 셀러)",
+                caseName: "케이스 3. 투잡 셀러",
                 // 1. 프로필 & 환경
                 gender: "남성",
                 job: "회사원 + 자영업(온라인)",
@@ -963,7 +964,7 @@
                 ]
             },
             {
-                caseName: "케이스 4번 (현장 자영업자)",
+                caseName: "케이스 4. 현장 자영업자",
                 // 1. 프로필 & 환경
                 gender: "남성",
                 job: "자영업 (셀프 인테리어 손재주)",
@@ -1028,7 +1029,7 @@
                 ]
             },
             {
-                caseName: "케이스 5번 (오프라인 수공예/커피)",
+                caseName: "케이스 5. 수공예/커피 자영업",
                 // 1. 프로필 & 환경
                 gender: "남성",
                 job: "자영업(오프라인)",
@@ -1093,7 +1094,7 @@
                 ]
             },
             {
-                caseName: "케이스 6번 (8년차 AI 개발자)",
+                caseName: "케이스 6. 8년차 AI 개발자",
                 // 1. 프로필 & 환경
                 gender: "여성",
                 job: "프리랜서 (컴공 전공, 8년차 개발자)",
