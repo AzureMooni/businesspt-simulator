@@ -474,6 +474,21 @@
                         <!-- JS에서 10개 렌더링 -->
                     </div>
                 </div>
+
+                <!-- 🎯 3주차 시뮬레이션 시 케이스별 내 키콘텐츠 기획 지정 상품/서비스 -->
+                <div id="p2_week3ItemContainer" class="bg-amber-950/60 p-3.5 rounded-xl border border-amber-500/40 shadow-md hidden">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <span class="text-xs md:text-sm font-black text-amber-300 flex items-center gap-1.5">
+                            🎯 [3주차 내 키콘텐츠 기획] 해당 수강생 케이스별 지정 희망 상품/서비스
+                        </span>
+                        <span class="text-[10px] bg-amber-500/20 text-amber-300 font-extrabold px-2.5 py-0.5 rounded border border-amber-500/30">
+                            3주차 과제 전용 매칭
+                        </span>
+                    </div>
+                    <div id="p2_week3ItemText" class="text-sm md:text-base font-extrabold text-amber-100 bg-black/50 p-3 rounded-lg border border-amber-500/30 leading-snug">
+                        -
+                    </div>
+                </div>
             </div>
 
             <!-- 탭 3: 선호 유튜브 & 라이프스타일 -->
@@ -784,6 +799,7 @@
                 targetTime: "3개월 이상",
                 sellingItem: "없음 (현재 판매 중인 상품 없음)",
                 wishItem: "자기관리상품, 가방, 운동화, 향수, 화장품, 운동용품 (1~10만 원대)",
+                week3Item: "안다르 러닝벨트",
                 itemCategory: "상품",
                 itemReason: "신체, 정신 모두 건강해야 돈을 벌고 공부도 하고 역량을 최대로 발휘할 수 있기 때문",
                 itemPool: [
@@ -849,6 +865,7 @@
                 targetTime: "될 때까지 한다",
                 sellingItem: "없음",
                 wishItem: "주방용품, 건강식품 (10~25만 원대)",
+                week3Item: "데체코 올리오 엑스트라 버진 디 올리바 올리브오일, 1L",
                 itemCategory: "상품",
                 itemReason: "주부라 잘하는 걸 몰라서 무엇을 팔아야 할지 고민이지만 주방/건강 분야 도전 희망",
                 itemPool: [
@@ -914,6 +931,7 @@
                 targetTime: "6개월 이상",
                 sellingItem: "없음",
                 wishItem: "주방용품, 생활용품 (1~10만 원대)",
+                week3Item: "바퀜 밀폐용기",
                 itemCategory: "상품",
                 itemReason: "10년 자취 경험으로 관심도가 높고, 집에서 보내는 휴식시간을 영상 제작에 바로 활용 가능",
                 itemPool: [
@@ -979,6 +997,7 @@
                 targetTime: "9개월 이상",
                 sellingItem: "없음",
                 wishItem: "셀프 인테리어 용품 & 시공 코칭 (1~10만 원대)",
+                week3Item: "디월트 20V 전동 충전 해머 무선 드릴 공구 드라이버 (디월트 전동 드릴)",
                 itemCategory: "서비스 / 상품",
                 itemReason: "도어락, 수전, LED, 도배/장판 셀프 교체 경험을 바탕으로 왕초보자에게 도움 전달 가능",
                 itemPool: [
@@ -1044,6 +1063,7 @@
                 targetTime: "1년 이상",
                 sellingItem: "스페인어 동요, 커피 (1만 원 미만)",
                 wishItem: "스페인어 동요 콘텐츠 & 커피 상품",
+                week3Item: "네스프레소 커피머신",
                 itemCategory: "서비스 / 상품",
                 itemReason: "스페인어 흥미로 재밌게 공부하며 커피 바리스타 경력을 살려 판매 희망",
                 itemPool: [
@@ -1109,6 +1129,7 @@
                 targetTime: "6개월 이상",
                 sellingItem: "AI 강의",
                 wishItem: "AI & 바이브 코딩 유료 강의 (50만 원 이상)",
+                week3Item: "바이브 코딩 강의",
                 itemCategory: "강의 / 서비스",
                 itemReason: "8년차 개발자 전문성과 한 달 만에 구독자 1만 명 돌파 경험 보유. 출시 후 결제 전환 유치 고민 중",
                 itemPool: [
@@ -1656,6 +1677,17 @@
                     poolContainer.classList.add('hidden');
                 }
 
+                // 🎯 3주차 과제일 때: 케이스별 내 키콘텐츠 기획 지정 희망 상품/서비스 렌더링
+                const w3Container = document.getElementById('p2_week3ItemContainer');
+                const w3Text = document.getElementById('p2_week3ItemText');
+
+                if (weekDigits === '3' && selectedPersona.week3Item) {
+                    if (w3Text) w3Text.innerText = selectedPersona.week3Item;
+                    if (w3Container) w3Container.classList.remove('hidden');
+                } else {
+                    if (w3Container) w3Container.classList.add('hidden');
+                }
+
                 // 탭 3: 유튜브 & 라이프스타일
                 const ytContainer = document.getElementById('p3_youtube');
                 if (ytContainer && Array.isArray(selectedPersona.youtubeChannels)) {
@@ -1672,8 +1704,8 @@
                 document.getElementById('p4_comm').innerText = selectedPersona.communication || "-";
             }
 
-            // 2주차일 때는 10선 아이템 검증 탭(2번 탭) 자동 노출, 그 외는 1번 탭 리셋
-            if (weekDigits === '2') {
+            // 2주차 및 3주차일 때는 상품/아이템 확인이 핵심이므로 2번 탭(목표 & 아이템) 자동 노출
+            if (weekDigits === '2' || weekDigits === '3') {
                 switchPersonaTab(2);
             } else {
                 switchPersonaTab(1);
