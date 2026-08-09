@@ -156,22 +156,27 @@
         <div class="glass-card bg-neutral-900 border border-amber-500/30 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl text-left space-y-4 max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center border-b border-white/10 pb-3 shrink-0">
                 <div class="flex items-center gap-2">
-                    <span class="bg-amber-500/20 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded border border-amber-500/30">v1.4 NEW</span>
+                    <span class="bg-amber-500/20 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded border border-amber-500/30">v1.5 NEW</span>
                     <h3 class="text-base font-bold text-white flex items-center gap-1.5">✨ 최신 업데이트 소식</h3>
                 </div>
                 <button onclick="toggleWhatsNewModal()" class="text-gray-400 hover:text-white text-lg font-bold">✕</button>
             </div>
 
             <div class="space-y-3 overflow-y-auto pr-1 flex-1 text-xs leading-relaxed text-gray-300">
-                <!-- 오늘 업데이트 (v1.4) -->
+                <!-- 오늘 최신 업데이트 (v1.5) -->
                 <div class="bg-amber-500/10 rounded-xl p-3 border border-amber-500/30 space-y-1">
-                    <div class="font-extrabold text-amber-300 flex items-center gap-1">📊 실전 수강생 6인 페르소나 & 4탭 리포트 (v1.4)</div>
-                    <p class="text-gray-300 text-[11px]">구글 시트 기반 실전 6개 사례(30여 항목)를 📋프로필 💰목표 📺유튜브 🧠성향 4개 탭 리포트로 완벽 탑재했습니다.</p>
+                    <div class="font-extrabold text-amber-300 flex items-center gap-1">🛍️ 3주차 [내 키콘텐츠 기획] 케이스별 지정 상품 연동 (v1.5)</div>
+                    <p class="text-gray-300 text-[11px]">3주차 과제 진행 시 각 수강생 케이스별 지정 희망 상품/서비스(러닝벨트, 올리브오일, 밀폐용기, 전동드릴, 커피머신, 바이브코딩)가 💰2번 탭에 자동 매칭됩니다.</p>
                 </div>
 
                 <div class="bg-emerald-500/10 rounded-xl p-3 border border-emerald-500/30 space-y-1">
                     <div class="font-extrabold text-emerald-300 flex items-center gap-1">🎲 2주차 시장성 검증 무작위 10선 추첨</div>
                     <p class="text-gray-300 text-[11px]">2주차 과제 진행 시 각 수강생 케이스별 20개 아이템 중 무작위 10개를 자동 추첨하여 💰2번 탭에 제공합니다.</p>
+                </div>
+
+                <div class="bg-blue-500/10 rounded-xl p-3 border border-blue-500/30 space-y-1">
+                    <div class="font-extrabold text-blue-300 flex items-center gap-1">📊 실전 수강생 6인 페르소나 & 4탭 리포트</div>
+                    <p class="text-gray-300 text-[11px]">구글 시트 기반 실전 6개 사례(30여 항목)를 📋프로필 💰목표 📺유튜브 🧠성향 4개 탭 리포트로 완벽 탑재했습니다.</p>
                 </div>
 
                 <div class="bg-red-500/10 rounded-xl p-3 border border-red-500/30 space-y-1">
@@ -180,8 +185,8 @@
                 </div>
 
                 <div class="bg-purple-500/10 rounded-xl p-3 border border-purple-500/30 space-y-1">
-                    <div class="font-extrabold text-purple-300 flex items-center gap-1">📱 모바일 가독성 & 헤더 겹침 완벽 방지</div>
-                    <p class="text-gray-300 text-[11px]">모바일 폰트 확대, 한글 줄바꿈(keep-all) 최적화, 스크롤 시 헤더 글자 겹침 방지 반투명 블러 레이어를 적용했습니다.</p>
+                    <div class="font-extrabold text-purple-300 flex items-center gap-1">📱 모바일 UI 최적화 & 컨트롤 버튼 규격 통일</div>
+                    <p class="text-gray-300 text-[11px]">모바일 폰트 확대, 한글 줄바꿈(keep-all) 최적화 및 시작/일시정지/정지 버튼 3열 균등 그리드 1:1 규격을 적용했습니다.</p>
                 </div>
             </div>
 
@@ -1734,7 +1739,7 @@
         }
 
         // ✨ What's New 업데이트 공지 모달 토글
-        const LATEST_VERSION = "v1.4";
+        const LATEST_VERSION = "v1.5";
 
         function toggleWhatsNewModal() {
             const modal = document.getElementById('whatsNewModal');
