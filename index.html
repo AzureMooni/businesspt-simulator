@@ -113,39 +113,39 @@
     <!-- 어두운 오버레이 레이어 -->
     <div id="bgOverlay" class="bg-overlay"></div>
 
-    <!-- 상단 헤더 (스크롤 시 글자 겹침 방지용 블러 & 반투명 배경 적용) -->
-    <header id="mainHeader" class="w-full max-w-4xl flex justify-between items-center z-30 sticky top-0 py-2.5 px-3 mb-4 bg-black/70 backdrop-blur-md rounded-2xl border border-white/10 shadow-lg">
+    <!-- 상단 헤더 (가운데 박스 max-w-3xl 폭 통일 & 스크롤 시 글자 겹침 방지) -->
+    <header id="mainHeader" class="w-full max-w-3xl flex justify-between items-center z-30 sticky top-0 py-2.5 px-3 mb-4 bg-black/70 backdrop-blur-md rounded-2xl border border-white/10 shadow-lg">
         <!-- 타이틀 (홈 리셋 버튼 역할) -->
-        <button onclick="goHome()" class="text-sm sm:text-base md:text-lg font-black tracking-wider text-red-500 uppercase flex items-center gap-2 whitespace-nowrap hover:text-red-400 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group" title="홈으로 이동 (새 시뮬레이션 뽑기 & UI 원복)">
+        <button onclick="goHome()" class="text-sm sm:text-base md:text-lg font-black tracking-wider text-red-500 uppercase flex items-center gap-2 whitespace-nowrap hover:text-red-400 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group shrink-0" title="홈으로 이동 (새 시뮬레이션 뽑기 & UI 원복)">
             <span id="recordingIndicator" class="inline-block w-2.5 h-2.5 bg-gray-500 rounded-full group-hover:bg-red-400 transition"></span>
-            🎯 BPT 교육생 실전 시뮬레이터
+            🎯 BPT 시뮬레이터
         </button>
         
-        <!-- 헤더 미니멀 버튼 그룹 -->
-        <div class="flex items-center gap-2">
+        <!-- 헤더 미니멀 버튼 그룹 (모바일 반응형 가로 스크롤 지원) -->
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar max-w-[65%] sm:max-w-none pl-1">
             <!-- ✨ What's New 업데이트 공지 버튼 -->
-            <button onclick="toggleWhatsNewModal()" class="relative bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs px-2.5 py-1.5 rounded-lg border border-amber-500/40 transition whitespace-nowrap font-bold flex items-center gap-1 shadow-sm">
+            <button onclick="toggleWhatsNewModal()" class="relative bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-[11px] sm:text-xs px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg border border-amber-500/40 transition whitespace-nowrap font-bold flex items-center gap-1 shadow-sm shrink-0">
                 <span id="whatsNewBadge" class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-                ✨ What's New
+                ✨ 소식
             </button>
 
             <!-- 🚀 12기 커뮤니티 이동 버튼 -->
-            <a href="https://12th-bpt-training.vercel.app/" target="_blank" rel="noopener noreferrer" class="relative group bg-red-950/80 hover:bg-red-900/90 text-red-200 text-xs px-3 py-1.5 rounded-lg border border-red-500/40 transition whitespace-nowrap font-bold flex items-center gap-1.5 shadow-md">
+            <a href="https://12th-bpt-training.vercel.app/" target="_blank" rel="noopener noreferrer" class="relative group bg-red-950/80 hover:bg-red-900/90 text-red-200 text-[11px] sm:text-xs px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-red-500/40 transition whitespace-nowrap font-bold flex items-center gap-1.5 shadow-md shrink-0">
                 <span class="relative flex h-2 w-2">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                 </span>
-                🚀 12기 커뮤니티
+                🚀 12기
             </a>
 
             <!-- 👁️ 메인 시뮬레이션 창 토글 버튼 (사라지지 않는 컨트롤) -->
-            <button id="toggleCardHeaderBtn" onclick="toggleMainCardFromHeader()" class="bg-white/10 hover:bg-white/20 text-xs px-3 py-1.5 rounded-lg border border-white/20 transition whitespace-nowrap font-bold flex items-center gap-1 shadow-sm" title="가운데 시뮬레이션 창 끄기/켜기">
+            <button id="toggleCardHeaderBtn" onclick="toggleMainCardFromHeader()" class="bg-white/10 hover:bg-white/20 text-[11px] sm:text-xs px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-white/20 transition whitespace-nowrap font-bold flex items-center gap-1 shadow-sm shrink-0" title="가운데 시뮬레이션 창 끄기/켜기">
                 <span id="toggleCardIcon">👁️</span>
                 <span id="toggleCardText">화면 끄기</span>
             </button>
             
             <!-- ⚙️ 환경 설정 팝업 버튼 -->
-            <button onclick="toggleSettingsModal()" class="bg-white/10 hover:bg-white/20 text-xs px-3 py-1.5 rounded-lg border border-white/20 transition flex items-center gap-1 font-medium">
+            <button onclick="toggleSettingsModal()" class="bg-white/10 hover:bg-white/20 text-[11px] sm:text-xs px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-white/20 transition flex items-center gap-1 font-medium whitespace-nowrap shrink-0">
                 ⚙️ 설정
             </button>
         </div>
@@ -598,8 +598,8 @@
         </div>
     </main>
 
-    <!-- 하단 푸터 -->
-    <footer id="mainFooter" class="z-10 text-[10px] md:text-xs text-gray-400 text-center mt-4 sm:mt-0 max-w-4xl px-4 leading-relaxed" style="word-break: keep-all;">
+    <!-- 하단 푸터 (가운데 박스 max-w-3xl 폭 통일) -->
+    <footer id="mainFooter" class="z-10 text-[10px] md:text-xs text-gray-400 text-center mt-4 sm:mt-0 max-w-3xl px-4 leading-relaxed" style="word-break: keep-all;">
         본 서비스는 비즈니스 PT 공식 서비스가 아닌, 교육생의 자가 학습 및 최종 테스트 대비를 위해 비공식적으로 제작된 개인 훈련용 도구입니다.<br class="hidden sm:inline"> 마이크를 통해 녹음된 음성 데이터는 외부 서버에 수집되거나 저장되지 않으며, 전적으로 브라우저 내부에서만 안전하게 임시 처리됩니다.
     </footer>
 
