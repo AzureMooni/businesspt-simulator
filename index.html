@@ -394,29 +394,29 @@
 
         <!-- 무작위 회원 페르소나 (방안 1: 탭 4분할 카테고리 구조) -->
         <div class="bg-black/60 rounded-2xl p-4 md:p-5 text-left border border-white/15 shadow-2xl space-y-4">
-            <!-- 페르소나 헤더 영역 (모바일 줄바꿈 방지 및 콤팩트 레이아웃) -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-white/10 pb-3">
-                <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-                    <span class="text-xs sm:text-sm font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5 whitespace-nowrap">
-                        👤 수강생 페르소나
+            <!-- 페르소나 헤더 영역 (타이틀 제거 후 케이스 뱃지 + 탭 버튼 100% 한눈 풀텍스트 배치) -->
+            <div class="flex flex-col space-y-3 border-b border-white/10 pb-3">
+                <div class="flex items-center justify-between">
+                    <span id="personaCategoryBadge" class="text-xs md:text-sm bg-amber-500/20 text-amber-300 font-black px-3 py-1 rounded-full border border-amber-500/30 whitespace-nowrap shadow-sm">
+                        👤 케이스 1. 회사원
                     </span>
-                    <span id="personaCategoryBadge" class="text-xs bg-amber-500/20 text-amber-300 font-extrabold px-2.5 py-0.5 rounded-full border border-amber-500/30 whitespace-nowrap">
-                        케이스 1 (회사원)
+                    <span class="text-[10px] text-gray-400 font-extrabold hidden sm:inline">
+                        탭을 터치하여 수강생 세부 설문 정보 전환
                     </span>
                 </div>
 
-                <!-- 탭 이동 네비게이션 버튼 그룹 (모바일 반응형 가로 스크롤 및 글자 확대) -->
-                <div class="flex items-center gap-1.5 bg-white/5 p-1 rounded-xl border border-white/10 text-xs font-bold overflow-x-auto no-scrollbar max-w-full">
-                    <button id="pTab1" onclick="switchPersonaTab(1)" class="px-3.5 py-1.5 rounded-lg transition bg-amber-500 text-black font-black shadow-md whitespace-nowrap shrink-0">
+                <!-- 탭 이동 네비게이션 버튼 그룹 (4개 탭 버튼 풀텍스트 말줄임없이 시원하게 노출) -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 w-full text-xs font-bold">
+                    <button id="pTab1" onclick="switchPersonaTab(1)" class="w-full py-2 px-2 rounded-lg transition bg-amber-500 text-black font-black shadow-md text-center text-xs whitespace-nowrap">
                         📋 1. 프로필 & 환경
                     </button>
-                    <button id="pTab2" onclick="switchPersonaTab(2)" class="px-3.5 py-1.5 rounded-lg transition text-gray-300 hover:text-white hover:bg-white/10 whitespace-nowrap shrink-0">
+                    <button id="pTab2" onclick="switchPersonaTab(2)" class="w-full py-2 px-2 rounded-lg transition text-gray-300 hover:text-white hover:bg-white/10 bg-white/5 border border-white/10 text-center text-xs whitespace-nowrap">
                         💰 2. 목표 & 아이템
                     </button>
-                    <button id="pTab3" onclick="switchPersonaTab(3)" class="px-3.5 py-1.5 rounded-lg transition text-gray-300 hover:text-white hover:bg-white/10 whitespace-nowrap shrink-0">
+                    <button id="pTab3" onclick="switchPersonaTab(3)" class="w-full py-2 px-2 rounded-lg transition text-gray-300 hover:text-white hover:bg-white/10 bg-white/5 border border-white/10 text-center text-xs whitespace-nowrap">
                         📺 3. 유튜브 & 라이프
                     </button>
-                    <button id="pTab4" onclick="switchPersonaTab(4)" class="px-3.5 py-1.5 rounded-lg transition text-gray-300 hover:text-white hover:bg-white/10 whitespace-nowrap shrink-0">
+                    <button id="pTab4" onclick="switchPersonaTab(4)" class="w-full py-2 px-2 rounded-lg transition text-gray-300 hover:text-white hover:bg-white/10 bg-white/5 border border-white/10 text-center text-xs whitespace-nowrap">
                         🧠 4. 성향 & 소통
                     </button>
                 </div>
@@ -1581,10 +1581,10 @@
                 const content = document.getElementById(`pTabContent${i}`);
                 if (btn && content) {
                     if (i === tabNum) {
-                        btn.className = "px-3 py-1 rounded-lg transition bg-amber-500 text-black font-black shadow-md whitespace-nowrap shrink-0";
+                        btn.className = "w-full py-2 px-2 rounded-lg transition bg-amber-500 text-black font-black shadow-md text-center text-xs whitespace-nowrap";
                         content.classList.remove('hidden');
                     } else {
-                        btn.className = "px-3 py-1 rounded-lg transition text-gray-300 hover:text-white hover:bg-white/10 whitespace-nowrap shrink-0";
+                        btn.className = "w-full py-2 px-2 rounded-lg transition text-gray-300 hover:text-white hover:bg-white/10 bg-white/5 border border-white/10 text-center text-xs whitespace-nowrap";
                         content.classList.add('hidden');
                     }
                 }
@@ -1621,7 +1621,7 @@
             // 30여개 전체 설문 항목 100% 탭 데이터 바인딩
             if (typeof selectedPersona === 'object' && selectedPersona !== null) {
                 const badge = document.getElementById('personaCategoryBadge');
-                if (badge) badge.innerText = selectedPersona.caseName || "실전 페르소나";
+                if (badge) badge.innerText = `👤 ${selectedPersona.caseName || '실전 페르소나'}`;
 
                 // 탭 1: 프로필 & 환경
                 document.getElementById('p1_job').innerText = `${selectedPersona.gender || ''} ${selectedPersona.job || ''}`;
