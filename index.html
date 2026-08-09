@@ -156,31 +156,32 @@
         <div class="glass-card bg-neutral-900 border border-amber-500/30 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl text-left space-y-4 max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center border-b border-white/10 pb-3 shrink-0">
                 <div class="flex items-center gap-2">
-                    <span class="bg-amber-500/20 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded border border-amber-500/30">v1.3</span>
+                    <span class="bg-amber-500/20 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded border border-amber-500/30">v1.4 NEW</span>
                     <h3 class="text-base font-bold text-white flex items-center gap-1.5">✨ 최신 업데이트 소식</h3>
                 </div>
                 <button onclick="toggleWhatsNewModal()" class="text-gray-400 hover:text-white text-lg font-bold">✕</button>
             </div>
 
             <div class="space-y-3 overflow-y-auto pr-1 flex-1 text-xs leading-relaxed text-gray-300">
-                <div class="bg-white/5 rounded-xl p-3 border border-white/10 space-y-1">
-                    <div class="font-extrabold text-red-400 flex items-center gap-1">🔥 실전 비디오 하드 모드 (HARD) 신설</div>
-                    <p class="text-gray-400 text-[11px]">실전 비디오 배경 + 🚨 돌발 팝업 경보로 실제 발표장 긴장감을 똑같이 구현한 원클릭 프리셋 추가!</p>
+                <!-- 오늘 업데이트 (v1.4) -->
+                <div class="bg-amber-500/10 rounded-xl p-3 border border-amber-500/30 space-y-1">
+                    <div class="font-extrabold text-amber-300 flex items-center gap-1">📊 실전 수강생 6인 페르소나 & 4탭 리포트 (v1.4)</div>
+                    <p class="text-gray-300 text-[11px]">구글 시트 기반 실전 6개 사례(30여 항목)를 📋프로필 💰목표 📺유튜브 🧠성향 4개 탭 리포트로 완벽 탑재했습니다.</p>
                 </div>
 
-                <div class="bg-white/5 rounded-xl p-3 border border-white/10 space-y-1">
-                    <div class="font-extrabold text-amber-300 flex items-center gap-1">👁️ 헤더 고정 '화면 끄기/켜기' & 🏠 홈 리셋 버튼</div>
-                    <p class="text-gray-400 text-[11px]">상단 헤더에 사라지지 않는 화면 토글 버튼 추가 & 메인 타이틀을 누르면 홈으로 즉시 리셋됩니다.</p>
+                <div class="bg-emerald-500/10 rounded-xl p-3 border border-emerald-500/30 space-y-1">
+                    <div class="font-extrabold text-emerald-300 flex items-center gap-1">🎲 2주차 시장성 검증 무작위 10선 추첨</div>
+                    <p class="text-gray-300 text-[11px]">2주차 과제 진행 시 각 수강생 케이스별 20개 아이템 중 무작위 10개를 자동 추첨하여 💰2번 탭에 제공합니다.</p>
                 </div>
 
-                <div class="bg-white/5 rounded-xl p-3 border border-white/10 space-y-1">
-                    <div class="font-extrabold text-emerald-300 flex items-center gap-1">🔤 Pretendard 프리미엄 웹폰트 & 디자인 고도화</div>
-                    <p class="text-gray-400 text-[11px]">Pretendard 웹폰트와 네온 글로우 테두리로 텍스트 시독성과 Visual UI 완성도를 대폭 향상!</p>
+                <div class="bg-red-500/10 rounded-xl p-3 border border-red-500/30 space-y-1">
+                    <div class="font-extrabold text-red-400 flex items-center gap-1">⏱️ 20분 제한 시간 & 0~3주차 실전 범위</div>
+                    <p class="text-gray-300 text-[11px]">실제 테스트 기준에 맞춰 0~3주차로 범위를 정제하고, 20분 도달 시 자동 종료 & 음성 안내 기능이 탑재되었습니다.</p>
                 </div>
 
-                <div class="bg-white/5 rounded-xl p-3 border border-white/10 space-y-1">
-                    <div class="font-extrabold text-purple-300 flex items-center gap-1">🌐 12기 Vercel 커뮤니티 실시간 DB 연동</div>
-                    <p class="text-gray-400 text-[11px]">12기 수강생들이 등록한 최신 돌발질문이 시뮬레이터에 실시간으로 동기화되어 출제됩니다.</p>
+                <div class="bg-purple-500/10 rounded-xl p-3 border border-purple-500/30 space-y-1">
+                    <div class="font-extrabold text-purple-300 flex items-center gap-1">📱 모바일 가독성 & 헤더 겹침 완벽 방지</div>
+                    <p class="text-gray-300 text-[11px]">모바일 폰트 확대, 한글 줄바꿈(keep-all) 최적화, 스크롤 시 헤더 글자 겹침 방지 반투명 블러 레이어를 적용했습니다.</p>
                 </div>
             </div>
 
@@ -1701,7 +1702,7 @@
         }
 
         // ✨ What's New 업데이트 공지 모달 토글
-        const LATEST_VERSION = "v1.3";
+        const LATEST_VERSION = "v1.4";
 
         function toggleWhatsNewModal() {
             const modal = document.getElementById('whatsNewModal');
