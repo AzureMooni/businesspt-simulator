@@ -331,12 +331,6 @@
                         <option value="" disabled selected>3주차 항목 선택...</option>
                     </select>
                 </div>
-                <div>
-                    <label class="text-xs font-bold text-purple-400 block mb-1">4주차 (풀링콘텐츠 기획)</label>
-                    <select id="selectWeek4Tasks" onchange="selectManualTask('4', this.value)" class="w-full bg-black/60 text-xs text-white border border-white/20 p-2.5 rounded-lg outline-none cursor-pointer">
-                        <option value="" disabled selected>4주차 항목 선택...</option>
-                    </select>
-                </div>
             </div>
 
             <div class="pt-2 border-t border-white/10 shrink-0 flex gap-2">
@@ -365,7 +359,7 @@
             </h3>
         </div>
 
-        <!-- 2. 무작위 뽑기 과제 (0주차 2~3번 및 1~4주차 항목) -->
+        <!-- 2. 무작위 뽑기 과제 (0주차 2~3번 및 1~3주차 항목) -->
         <div class="bg-white/5 border border-white/10 rounded-xl p-3.5 md:p-4 mb-4 text-left shadow-sm">
             <div class="flex items-center justify-between mb-1">
                 <div class="flex items-center gap-2">
@@ -387,52 +381,111 @@
 
         <hr class="border-white/10 my-4 md:my-6" />
 
-        <!-- 무작위 회원 페르소나 (가독성 구조화 레이아웃) -->
-        <div class="bg-black/50 rounded-xl p-4 md:p-5 text-left border border-white/10 shadow-inner space-y-3">
-            <div class="flex items-center justify-between">
-                <span class="text-[10px] md:text-xs font-extrabold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-                    👤 매칭된 회원 페르소나
-                </span>
-                <span id="personaCategoryBadge" class="text-[10px] bg-amber-500/20 text-amber-300 font-extrabold px-2.5 py-0.5 rounded border border-amber-500/30">
-                    프로필 분석
-                </span>
-            </div>
-
-            <!-- 구조화된 페르소나 분할 태그 카드 -->
-            <div id="personaContainer" class="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-1">
-                <!-- 1. 기본 인적사항 / 직업 -->
-                <div class="bg-white/5 hover:bg-white/10 transition rounded-xl p-3.5 border border-white/10 shadow-sm">
-                    <div class="text-[10px] font-extrabold text-gray-400 mb-1 flex items-center gap-1">
-                        🆔 직업 및 상황
-                    </div>
-                    <div id="personaProfileText" class="text-xs md:text-sm font-bold text-amber-200 leading-snug">
-                        -
-                    </div>
+        <!-- 무작위 회원 페르소나 (방안 1: 탭 4분할 카테고리 구조) -->
+        <div class="bg-black/60 rounded-2xl p-4 md:p-5 text-left border border-white/15 shadow-2xl space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs md:text-sm font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                        👤 실전 수강생 페르소나 리포트
+                    </span>
+                    <span id="personaCategoryBadge" class="text-[10px] bg-amber-500/20 text-amber-300 font-extrabold px-2.5 py-0.5 rounded-full border border-amber-500/30">
+                        케이스 1번 (회사원)
+                    </span>
                 </div>
 
-                <!-- 2. 목표 및 희망 아이템 -->
-                <div class="bg-white/5 hover:bg-white/10 transition rounded-xl p-3.5 border border-white/10 shadow-sm">
-                    <div class="text-[10px] font-extrabold text-gray-400 mb-1 flex items-center gap-1">
-                        🎯 목표 및 세부 아이템
-                    </div>
-                    <div id="personaGoalText" class="text-xs md:text-sm font-bold text-emerald-200 leading-snug">
-                        -
-                    </div>
-                </div>
-
-                <!-- 3. 주요 의심 및 고민거리 -->
-                <div class="bg-white/5 hover:bg-white/10 transition rounded-xl p-3.5 border border-white/10 shadow-sm">
-                    <div class="text-[10px] font-extrabold text-gray-400 mb-1 flex items-center gap-1">
-                        💡 주요 고민 및 장벽
-                    </div>
-                    <div id="personaPainText" class="text-xs md:text-sm font-bold text-red-200 leading-snug">
-                        -
-                    </div>
+                <!-- 탭 이동 네비게이션 버튼 그룹 -->
+                <div class="flex items-center gap-1 bg-white/5 p-1 rounded-xl border border-white/10 text-[11px] font-bold">
+                    <button id="pTab1" onclick="switchPersonaTab(1)" class="px-3 py-1 rounded-lg transition bg-amber-500 text-black font-black shadow-md">
+                        📋 1. 프로필 & 환경
+                    </button>
+                    <button id="pTab2" onclick="switchPersonaTab(2)" class="px-3 py-1 rounded-lg transition text-gray-300 hover:text-white hover:bg-white/10">
+                        💰 2. 목표 & 아이템
+                    </button>
+                    <button id="pTab3" onclick="switchPersonaTab(3)" class="px-3 py-1 rounded-lg transition text-gray-300 hover:text-white hover:bg-white/10">
+                        📺 3. 유튜브 & 라이프
+                    </button>
+                    <button id="pTab4" onclick="switchPersonaTab(4)" class="px-3 py-1 rounded-lg transition text-gray-300 hover:text-white hover:bg-white/10">
+                        🧠 4. 성향 & 소통
+                    </button>
                 </div>
             </div>
 
-            <!-- 이전 호환용 숨김 요소 (에러 방지용) -->
+            <!-- 탭 1: 프로필 & 환경 -->
+            <div id="pTabContent1" class="persona-tab-content grid grid-cols-2 md:grid-cols-4 gap-3 pt-1">
+                <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+                    <div class="text-[10px] font-bold text-gray-400 mb-1">👤 성별 & 직업</div>
+                    <div id="p1_job" class="text-xs md:text-sm font-extrabold text-amber-200">-</div>
+                </div>
+                <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+                    <div class="text-[10px] font-bold text-gray-400 mb-1">🎓 전공 & 이전 직업</div>
+                    <div id="p1_edu" class="text-xs md:text-sm font-extrabold text-amber-200">-</div>
+                </div>
+                <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+                    <div class="text-[10px] font-bold text-gray-400 mb-1">🚫 겸직 금지 유무</div>
+                    <div id="p1_dual" class="text-xs md:text-sm font-extrabold text-amber-200">-</div>
+                </div>
+                <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+                    <div class="text-[10px] font-bold text-gray-400 mb-1">📷 얼굴 노출 여부</div>
+                    <div id="p1_face" class="text-xs md:text-sm font-extrabold text-amber-200">-</div>
+                </div>
+            </div>
+
+            <!-- 탭 2: 목표 & 아이템 -->
+            <div id="pTabContent2" class="persona-tab-content hidden grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+                <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                    <div class="text-[10px] font-bold text-emerald-400 mb-1">💰 목표 매출 & 예상 기간</div>
+                    <div id="p2_revenue" class="text-xs md:text-sm font-extrabold text-emerald-200">-</div>
+                </div>
+                <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                    <div class="text-[10px] font-bold text-emerald-400 mb-1">🛒 희망 상품 / 서비스</div>
+                    <div id="p2_item" class="text-xs md:text-sm font-extrabold text-emerald-200">-</div>
+                </div>
+                <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                    <div class="text-[10px] font-bold text-emerald-400 mb-1">💡 아이템 선정 이유 / 가격대</div>
+                    <div id="p2_reason" class="text-xs md:text-sm font-bold text-emerald-100 leading-snug">-</div>
+                </div>
+            </div>
+
+            <!-- 탭 3: 선호 유튜브 & 라이프스타일 -->
+            <div id="pTabContent3" class="persona-tab-content hidden space-y-3 pt-1">
+                <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                    <div class="text-[10px] font-bold text-purple-300 mb-1">📺 즐겨보는 유튜브 채널 5선</div>
+                    <div id="p3_youtube" class="text-xs font-medium text-purple-100 leading-relaxed space-y-1">-</div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+                        <div class="text-[10px] font-bold text-purple-300 mb-1">⏳ 가장 많이 쓰는 시간/돈 (취미/특기)</div>
+                        <div id="p3_hobby" class="text-xs font-bold text-purple-200">-</div>
+                    </div>
+                    <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+                        <div class="text-[10px] font-bold text-purple-300 mb-1">🛍️ 판매 / 오프라인 모임 경험</div>
+                        <div id="p3_exp" class="text-xs font-bold text-purple-200">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 탭 4: 동기부여 & 소통 성향 -->
+            <div id="pTabContent4" class="persona-tab-content hidden grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+                <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                    <div class="text-[10px] font-bold text-amber-400 mb-1">🔥 동기부여 유발 상황</div>
+                    <div id="p4_motive" class="text-xs md:text-sm font-bold text-amber-200 leading-snug">-</div>
+                </div>
+                <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                    <div class="text-[10px] font-bold text-amber-400 mb-1">🏆 최고 성취감 느끼는 순간</div>
+                    <div id="p4_achieve" class="text-xs md:text-sm font-bold text-amber-200 leading-snug">-</div>
+                </div>
+                <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                    <div class="text-[10px] font-bold text-amber-400 mb-1">🗣️ 선호 의사소통 방식</div>
+                    <div id="p4_comm" class="text-xs md:text-sm font-extrabold text-amber-300 leading-snug">-</div>
+                </div>
+            </div>
+
+            <!-- 레거시 호환용 요소 (에러 방지) -->
             <p id="personaDesc" class="hidden"></p>
+            <div id="personaProfileText" class="hidden"></div>
+            <div id="personaRevenueText" class="hidden"></div>
+            <div id="personaGoalText" class="hidden"></div>
+            <div id="personaPainText" class="hidden"></div>
         </div>
 
         <!-- ⚡ 회원 돌발질문 (카드 옵션 선택 시 표시) -->
@@ -468,10 +521,12 @@
             </div>
         </div>
 
-        <!-- 타이머 및 컨트롤 버튼 영역 (고정 위치 보존 마진 컴팩트화) -->
-        <div class="mt-4 md:mt-5 flex flex-col items-center justify-center">
-            
-            <!-- 스톱워치 타이머 (00:00부터 카운트업) -->
+            <!-- 스톱워치 타이머 (최대 20분 제한 안내 포함) -->
+            <div class="flex items-center gap-1.5 mb-1">
+                <span class="text-[10px] md:text-xs font-black text-amber-400 bg-amber-500/20 px-2.5 py-0.5 rounded-full border border-amber-500/30">
+                    ⏱️ 시뮬레이션 최대 제한: 20분 (20:00)
+                </span>
+            </div>
             <div id="timer" class="text-4xl md:text-6xl font-black font-mono-timer tracking-wider text-white mb-3 md:mb-4 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
                 00:00
             </div>
@@ -682,68 +737,266 @@
             }
         ];
 
-        // 무작위 페르소나 데이터 (총 100개 이상의 다양한 경우의 수)
+        // 구글 시트 기반 12기 수강생 6개 실전 페르소나 데이터 (30여 개 전체 설문 항목 100% 반영)
         const personas = [
-            "40대 제조업 대표. 공장 폐수 처리 B2B 필터 판매 희망. 유튜브 효과성에 의심이 많음.",
-            "30대 수제 피자집 자영업자. 인근 경쟁 심화로 지역 명소 유입용 브랜드 밸류 상승 희망.",
-            "30대 직장인 프리랜서 트레이너. 독립하여 체형 교정 피트니스 클래스 판매 희망.",
-            "30대 주부 (육아휴직 중). 무재고 소자본 부수입을 원하나 아는 것이 없는 노베이스.",
-            "50대 대기업 은퇴 앞둔 부장. 캠핑/등산 취미 소싱 판매 희망하나 데이터 분석이 낯섦.",
-            "20대 취준생. 자본금 0원으로 지식창업 도전 중이나 당장 아이템 선정을 못 함.",
-            "30대 세무사. 상속세/증여세 고액 수임 건을 늘리고 싶으나 영상이 지루하다는 고민.",
-            "30대 IT 프론트엔드 개발자. 퇴근 후 사이드 프로젝트 부트캠프 판매 희망.",
-            "20대 대학생. 퍼스널 컬러 진단 창업 준비 중. SNS 릴스 홍보에 관심이 많으나 카메라 울렁증 있음.",
-            "50대 여성 자영업자. 수제 과일청 스마트스토어 운영. 매출 정체로 브랜딩 블로그와 유튜브 동시 희망.",
-            "30대 후반 필라테스 강사. 자기 센터 오픈 전 개인 브랜드 구축 희망. 영상 편집에 대한 두려움 있음.",
-            "40대 초반 공인중개사. 아파트 분양/매매 전문 채널 구축 원함. 사투리 교정과 신뢰감을 주길 희망.",
-            "30대 영어 학원 강사. 직장인 비즈니스 영어 인강 판매를 목표로 함. 경쟁 채널이 너무 많아 차별성 고민.",
-            "40대 인테리어 시공업체 대표. 시공 전후 숏폼으로 유입 늘리려 하나, 바쁜 현장 업무로 시간 부족.",
-            "30대 플로리스트. 수강생 모집을 위한 원데이 클래스 홍보 희망. 감성적인 비주얼은 좋으나 설득력 부족.",
-            "50대 정년퇴직 공무원. 행정서사 사무실 개업 홍보 희망. 격식 있는 어조이나 트렌디한 감각이 부족함.",
-            "20대 뷰티 메이크업 아티스트. 화장품 공동구매 및 뷰티 클래스 판매 원함. 이미지가 강해 대중성 고민.",
-            "30대 한의사. 다이어트 한약 및 체질 개선 상담 수임 원함. 전문 지식 전달과 대중적 흥미 사이 갈등.",
-            "40대 가구 공방 대표. DIY 조립 가구 판매 채널 기획. 나무 깎는 소리(ASMR)를 살리고 싶어 함.",
-            "30대 초반 프리랜서 디자이너. PPT 템플릿 제작 및 기업 출강 기획. 목소리가 작고 전달력 개선 희망.",
-            "50대 귀농 6년차 농부. 직접 재배한 유기농 사과 직거래 희망. 스마트폰 촬영 외 장비 다루기 미숙.",
-            "20대 후반 애견 미용 강사. 애견 셀프 미용 온라인 코칭 판매 원함. 강아지와 함께 촬영해야 하는 난관.",
-            "30대 보컬 트레이너. 축가/축가 축음 및 고음 발성 강좌 판매 타겟. 실력은 좋으나 마케팅 노하우 제로.",
-            "40대 여성 세무 전문 법무사. 상속 증여 전문 채널 구축 희망. 다소 딱딱하고 보수적인 이미지 고민.",
-            "30대 정리수납 전문가. 출장 수납 서비스 및 정리 꿀팁 유료 상담 원함. 구독자 타겟층 설정을 어려워함.",
-            "50대 공인 노무사. 직장 내 괴롭힘 및 급여 컨설팅 B2B 타겟. 유튜브 유입 경로 설계에 대한 이해 부족.",
-            "20대 취미 전문 미술 강사. 성인 대상 유화/아크릴화 클래스 모집. 감성은 풍부하나 말재주가 없다고 생각.",
-            "40대 가죽 공예 작가. 하이엔드 수제 가죽 가방 브랜드 런칭 희망. 높은 가격대에 대한 설득 로직 필요.",
-            "30대 중반 카페 창업 컨설턴트. 원두 납품 및 머신 판매 유통 연계 타겟. 커피 전문성에 대한 의심 방어 필요.",
-            "30대 요가 강사. 실버 요가 및 홈트레이닝 멤버십 판매 희망. 타겟층이 스마트 기기에 서툰 중장년층임.",
-            "40대 후반 1인 출판사 대표. 글쓰기/책 쓰기 교육 서비스 판매 원함. 지식은 깊으나 영상 포맷이 너무 지루함.",
-            "20대 패션 쇼핑몰 창업주. 동대문 사입 옷 코디법 숏폼 기획. 트렌디하나 채널 정체성을 잡지 못하고 방황.",
-            "30대 정리금융 자산관리사. 사회초년생 재테크 1:1 유료 컨설팅 연계 희망. 사기꾼 이미지 탈피가 급선무.",
-            "50대 도자기 공방 예술가. 도예 힐링 체험 패키지 판매 원함. 대화 어조가 매우 느리고 내성적 성향.",
-            "30대 아동 심리 상담사. 놀이 치료 강좌 및 교구 판매 희망. 학부모 신뢰도 확보 및 영상 톤앤매너 조율 필요.",
-            "40대 여성 속눈썹/네일샵 원장. 뷰티 창업 아카데미 수강생 유치 원함. 로컬 고객 위주에서 전국구 타겟으로 확장 희망.",
-            "30대 후반 특허 변리사. 스타트업 특허 등록 컨설팅 B2B 타겟. 유튜브 마케팅의 비즈니스적 가치에 회의적.",
-            "20대 홈베이킹 유튜버 지망. 유기농 베이킹 밀키트 판매 연계. 비주얼은 예쁘나 레시피 설명이 조리 있지 못함.",
-            "30대 웨딩 플래너. 프리미엄 웨딩 디렉팅 수임 원함. 고단가 서비스의 온라인 마케팅 신뢰도 확보 방안 고민.",
-            "40대 조경 인테리어 대표. 베란다 정원 및 단독주택 조경 의뢰 유입 희망. 시공 단가가 높아 구매 결정이 느림.",
-            "50대 생활 스포츠(탁구/배드민턴) 강사. 동호인 자세 교정 원포인트 레슨 유료 모집. 온라인 피드백 유치 목적.",
-            "20대 타투 아티스트. 하이엔드 감성 타투 작업 예약 유치. 타투에 대한 사회적 시선 극복 및 예술성 강조 필요.",
-            "30대 퍼스널 쇼퍼. 옷 못 입는 남성 대상 코디 대행 컨설팅 판매. 서비스 필요성 체감이 낮아 설득이 힘듦.",
-            "40대 중반 변호사. 이혼/재산분할 전문 상담 센터 유입 희망. 엄숙하고 차분한 어조이나 임팩트 있는 도입부 부족.",
-            "30대 와인 소믈리에. 입문자 대상 와인 클래스 및 와인 바 홍보 희망. 고급스러우면서도 진입 장벽 낮추기 고민.",
-            "50대 전통주 양조장 대표. 전통주 구독 서비스 런칭 희망. 온라인 결제 및 홍보 프로세스를 전혀 이해 못 함.",
-            "20대 수제 캔들/방향제 제작자. 답례품 단체 주문 계약 확보. 대량 생산 가능 수량과 단가 조율법 코칭 필요.",
-            "30대 한식 반찬가게 대표. 주간 정기 구독 반찬 배달 유치. 마진 구조 계산 및 배송 반경 내 효율적 지역 마케팅 필요.",
-            "40대 후반 미술 치료 상담사. 직장인 번아웃 미술 상담 세션 유치. 상담이라는 무거운 주제를 편안한 일상 톤으로 낮추길 원함.",
-            "30대 가상자산(블록체인) 분석가. 프리미엄 리포트 구독 채널 가입 유입. 투기 이미지 방지 및 법적 테두리 내 조언 로직 필요.",
-            "50대 중반 원목 낚시찌 수제 제작자. 매니아층 타겟 낚시찌 및 채비 세트 직판. 타겟층이 활성화된 낚시 커뮤니티 공략 원함.",
-            "20대 모바일 게임 튜토리얼 기획자. 게임 기획 지망생용 전자책 및 1:1 취업 멘토링. 취업 시장 분석 데이터 신뢰성 필요.",
-            "30대 후반 파티시에. 베이킹 아카데미 및 창업 레시피 전수 강좌 유치. 고가의 레시피 유출 방지 및 오프라인 보안책 원함.",
-            "40대 골프 레슨 프로. 비거리 향상 전문 숏폼 및 오프라인 레슨 모집. 레슨 예약 플랫폼 연동 및 실시간 분석 영상 기획.",
-            "30대 천연 화장품 DIY 강사. 천연 화장품 자격증 코스 모집. 오가닉 라이프스타일을 강조하는 비주얼 브랜딩 원함.",
-            "50대 퇴직 소방관. 재난 안전 교육 및 기업 민간 방재 컨설팅 의뢰 유치. 스피치 역량 보강 및 공익과 수익 사이 조율 필요.",
-            "20대 취미 자수/퀼트 크리에이터. 프랑스 자수 패키지 세트 판매. 꼼꼼한 제작 과정을 지루하지 않게 숏폼화하는 기획 요구.",
-            "30대 수제 맥주 공방 양조사. 수제 맥주 원데이 양조 클래스 모집. 주류법 관련 규제를 우회하는 안전한 마케팅 경로 기획.",
-            "40대 초반 개인 자산 매입 전문 딜러. 중고 명품/골프채 최고가 매입 서비스 유치. 고객 정보 보안 및 방문 매입 신뢰도 구축.",
-            "30대 스마트홈 사물인터넷(IoT) 엔지니어. 신축 아파트 홈 IoT 빌딩 구축 유료 컨설팅. 다소 어려운 기술을 쉽게 설명해야 함."
+            {
+                caseName: "케이스 1번 (회사원)",
+                // 1. 프로필 & 환경
+                gender: "여성",
+                job: "회사원 (경영 전공)",
+                prevJob: "회사원",
+                dualJob: "없음 (겸직 금지 조건 없음)",
+                faceNo: "없음 (얼굴 노출 가능)",
+                sns: "없음",
+
+                // 2. 목표 & 아이템
+                targetRevenue: "월 1,000만 원 이상",
+                targetTime: "3개월 이상",
+                sellingItem: "없음 (현재 판매 중인 상품 없음)",
+                wishItem: "자기관리상품, 가방, 운동화, 향수, 화장품, 운동용품 (1~10만 원대)",
+                itemCategory: "상품",
+                itemReason: "신체, 정신 모두 건강해야 돈을 벌고 공부도 하고 역량을 최대로 발휘할 수 있기 때문",
+
+                // 3. 유튜브 & 라이프스타일
+                hobbyTime: "없음 (특별한 취미 언급 없음)",
+                hobbyMoney: "없음",
+                youtubeChannels: [
+                    "김주환의 내면소통 / 명상 / 내가 나를 바꾸는게 가능할까?",
+                    "주언규 / 자기계발, 경제 / 돈 모을 줄 모르는 사람의 특징",
+                    "미키피디아 / 자기계발 / 말 잘하는 사람들의 비결은 뭘까?",
+                    "멸치탈출연구소 / 재활, 교정 / 어깨비대칭 한방에 없애는 방법",
+                    "melody_log7 / EDM음악 / 힙합에 EDM 섞은 리스트"
+                ],
+                sellExp: "있음 (무언가 판매해 본 경험 있음)",
+                meetExp: "없음",
+                buyExp: "있음 (SNS 광고/콘텐츠를 통해 상품 구매 경험 있음)",
+
+                // 4. 성향 & 소통
+                motive: "배운 내용을 통해 성과를 달성했을 때",
+                achievement: "목표로 세운 것을 달성했을 때",
+                communication: "만나서 소통하기 (오프라인 선호)",
+
+                // 돌발 질문
+                objections: [
+                    "퇴근하고 나면 체력이 너무 바닥나는데, 굳이 매주 오프라인 모임에 안 나가고 온라인 줌(ZOOM)으로만 수강하면 안 될까요?",
+                    "직장 겸직 금지 조항 때문에 회사에 알릴 수 없는데, 얼굴 노출 없이 목소리만으로 매출 1,000만 원 달성이 진짜 가능한가요?"
+                ]
+            },
+            {
+                caseName: "케이스 2번 (전업주부)",
+                // 1. 프로필 & 환경
+                gender: "여성",
+                job: "주부 (중국어학과, 항공과 학사)",
+                prevJob: "주부",
+                dualJob: "있음 (겸직 금지 유)",
+                faceNo: "없음 (얼굴 노출 가능)",
+                sns: "있음",
+
+                // 2. 목표 & 아이템
+                targetRevenue: "월 300만 원 이상",
+                targetTime: "될 때까지 한다",
+                sellingItem: "없음",
+                wishItem: "주방용품, 건강식품 (10~25만 원대)",
+                itemCategory: "상품",
+                itemReason: "주부라 잘하는 걸 몰라서 무엇을 팔아야 할지 고민이지만 주방/건강 분야 도전 희망",
+
+                // 3. 유튜브 & 라이프스타일
+                hobbyTime: "있음 (자기계발/일상)",
+                hobbyMoney: "있음 (건강/주방)",
+                youtubeChannels: [
+                    "리쥬라이크 / 일상, 육아브이로그 / 출산 브이로그",
+                    "일단이나 / 일상, 자기관리 / 예뻐진 이유",
+                    "안녕하세요 최화정이예요 / 요리",
+                    "진쏠미 / 마음건강 / 원하는 삶을 창조하는 법",
+                    "닥터조의 건강이야기 / 건강 / 인슐린 호르몬"
+                ],
+                sellExp: "없음",
+                meetExp: "있음 (강의 / 모임 경험 유)",
+                buyExp: "있음 (강의 구매 경험 유)",
+
+                // 4. 성향 & 소통
+                motive: "나 스스로가 성장하고 있다고 느껴질 때",
+                achievement: "목표로 세운 것을 달성했을 때",
+                communication: "전화 통화 선호",
+
+                // 돌발 질문
+                objections: [
+                    "저는 전업주부라 남들에게 자랑할 만한 전문 지식이 없는데, 10만 원이 넘는 고단가 주방용품을 사람들이 제 말만 믿고 살까요?",
+                    "남편한테 말 안 하고 수강료 결제했는데, 3달 안에 성과 안 나오면 환불되나요?"
+                ]
+            },
+            {
+                caseName: "케이스 3번 (투잡 셀러)",
+                // 1. 프로필 & 환경
+                gender: "남성",
+                job: "회사원 + 자영업(온라인)",
+                prevJob: "자영업(온라인)",
+                dualJob: "없다 (겸직 금지 없음)",
+                faceNo: "없음 (얼굴 노출 가능)",
+                sns: "없음",
+
+                // 2. 목표 & 아이템
+                targetRevenue: "월 1,000만 원",
+                targetTime: "6개월 이상",
+                sellingItem: "없음",
+                wishItem: "주방용품, 생활용품 (1~10만 원대)",
+                itemCategory: "상품",
+                itemReason: "10년 자취 경험으로 관심도가 높고, 집에서 보내는 휴식시간을 영상 제작에 바로 활용 가능",
+
+                // 3. 유튜브 & 라이프스타일
+                hobbyTime: "없음",
+                hobbyMoney: "없음",
+                youtubeChannels: [
+                    "모트라인 MOTline / 자동차",
+                    "강민우 돈깡TV / 금융",
+                    "해외소싱마스터 / 비즈니스 커머스 분석",
+                    "푸디랜드 / 음식점 소개",
+                    "큰손 노희영 / 올리브영 성공 비법"
+                ],
+                sellExp: "있음",
+                meetExp: "있음 (온라인 셀러 스터디 모임)",
+                buyExp: "있음 (강의 구매 경험 유)",
+
+                // 4. 성향 & 소통
+                motive: "배운 내용을 통해 성과를 달성했을 때",
+                achievement: "목표로 세운 것을 달성했을 때",
+                communication: "만나서 소통하기 (오프라인 선호)",
+
+                // 돌발 질문
+                objections: [
+                    "제가 셀러 스터디도 오래 했고 커머스 생리를 다 아는데, 트레이너님 방식대로 과제하면 유행 지나지 않나요? 제 방식대로 썸네일 짜면 안 될까요?",
+                    "온라인 쇼핑몰 운영으로도 바쁜데 과제량이 너무 많아요. 썸네일 찾기 과제 좀 줄여주시면 안 되나요?"
+                ]
+            },
+            {
+                caseName: "케이스 4번 (현장 자영업자)",
+                // 1. 프로필 & 환경
+                gender: "남성",
+                job: "자영업 (셀프 인테리어 손재주)",
+                prevJob: "자영업",
+                dualJob: "없다",
+                faceNo: "없음 (얼굴 노출 가능)",
+                sns: "있음",
+
+                // 2. 목표 & 아이템
+                targetRevenue: "월 300만 원",
+                targetTime: "9개월 이상",
+                sellingItem: "없음",
+                wishItem: "셀프 인테리어 용품 & 시공 코칭 (1~10만 원대)",
+                itemCategory: "서비스 / 상품",
+                itemReason: "도어락, 수전, LED, 도배/장판 셀프 교체 경험을 바탕으로 왕초보자에게 도움 전달 가능",
+
+                // 3. 유튜브 & 라이프스타일
+                hobbyTime: "있음",
+                hobbyMoney: "없음",
+                youtubeChannels: [
+                    "지식인사이드 / AI시대 몸값 폭등 사람 특징",
+                    "슈카월드 / 경제",
+                    "조승연의 탐구생활 / 인문학",
+                    "언더스탠딩 / 경제 문명사",
+                    "이지영 / 인문학 동기부여 밀의 자유론"
+                ],
+                sellExp: "있음",
+                meetExp: "없음",
+                buyExp: "있음 (상품 구매 경험 유)",
+
+                // 4. 성향 & 소통
+                motive: "주변 사람들 모두가 나로 인해 성장한다고 느껴질 때",
+                achievement: "다른 사람이 요청한 것을 성공적으로 해결했을 때",
+                communication: "만나서 소통하기 (오프라인 선호)",
+
+                // 돌발 질문
+                objections: [
+                    "제가 가게 비우기가 힘들고 지방에 살아서 오프라인 트레이닝 참석이 힘듭니다. 1:1 온라인 줌으로만 트레이닝 진행해 주시면 안 되나요?",
+                    "도어락이나 수전 교체 같은 단순 작업 영상이나 셀프 시공 꿀팁을 과연 사람들이 돈 내고 보거나 신청할까요?"
+                ]
+            },
+            {
+                caseName: "케이스 5번 (오프라인 수공예/커피)",
+                // 1. 프로필 & 환경
+                gender: "남성",
+                job: "자영업(오프라인)",
+                prevJob: "아르바이트 (바리스타)",
+                dualJob: "없다",
+                faceNo: "없음 (얼굴 노출 가능)",
+                sns: "없음",
+
+                // 2. 목표 & 아이템
+                targetRevenue: "월 1,000만 원 이상",
+                targetTime: "1년 이상",
+                sellingItem: "스페인어 동요, 커피 (1만 원 미만)",
+                wishItem: "스페인어 동요 콘텐츠 & 커피 상품",
+                itemCategory: "서비스 / 상품",
+                itemReason: "스페인어 흥미로 재밌게 공부하며 커피 바리스타 경력을 살려 판매 희망",
+
+                // 3. 유튜브 & 라이프스타일
+                hobbyTime: "있음 (스페인어/음악)",
+                hobbyMoney: "있음 (커피)",
+                youtubeChannels: [
+                    "흑자헬스 / 코미디",
+                    "ED 1인 기업가 / 경쟁자 없는 1가지 방법",
+                    "잇섭 / IT 테크",
+                    "커밍쏜 / 퍼스널브랜딩 유튜브 떡상",
+                    "뉴사이드 / 범죄 사건 분석"
+                ],
+                sellExp: "있음",
+                meetExp: "없음",
+                buyExp: "있음 (상품 구매 경험 유)",
+
+                // 4. 성향 & 소통
+                motive: "나 스스로가 성장하고 있다고 느껴질 때",
+                achievement: "새로운 내용 또는 기술을 배웠을 때",
+                communication: "카카오톡(메신저) 소통 선호",
+
+                // 돌발 질문
+                objections: [
+                    "제가 나이도 좀 있고 기계치라 유튜브 업로드나 편집 툴 다루는 게 너무 어려운데, 편집은 트레이너님이 다 가르쳐주시나요?",
+                    "스페인어 동요나 커피로 돈을 번다는 게 솔직히 감이 안 오는데 아이템을 다른 걸로 바꿔주시면 안 되나요?"
+                ]
+            },
+            {
+                caseName: "케이스 6번 (8년차 AI 개발자)",
+                // 1. 프로필 & 환경
+                gender: "여성",
+                job: "프리랜서 (컴공 전공, 8년차 개발자)",
+                prevJob: "회사원",
+                dualJob: "없다",
+                faceNo: "없음 (얼굴 노출 가능)",
+                sns: "있음",
+
+                // 2. 목표 & 아이템
+                targetRevenue: "월 1,000만 원",
+                targetTime: "6개월 이상",
+                sellingItem: "AI 강의",
+                wishItem: "AI & 바이브 코딩 유료 강의 (50만 원 이상)",
+                itemCategory: "강의 / 서비스",
+                itemReason: "8년차 개발자 전문성과 한 달 만에 구독자 1만 명 돌파 경험 보유. 출시 후 결제 전환 유치 고민 중",
+
+                // 3. 유튜브 & 라이프스타일
+                hobbyTime: "있음 (AI 기술/코딩)",
+                hobbyMoney: "있음",
+                youtubeChannels: [
+                    "하알라 / 예능 코믹",
+                    "Nate Herk / AI Claude Code Workflows",
+                    "안녕하세요원이입니다 / 연예인",
+                    "무빙워터 / 자기계발 2030 가이드",
+                    "뜬뜬 핑계고 / 예능"
+                ],
+                sellExp: "있음",
+                meetExp: "있음 (카페 할일 모임, 배드민턴, 운동 인증)",
+                buyExp: "있음 (서비스 구매 경험 유)",
+
+                // 4. 성향 & 소통
+                motive: "주변 사람들 모두가 나로 인해 성장한다고 느껴질 때",
+                achievement: "다른 사람이 요청한 것을 성공적으로 해결했을 때",
+                communication: "화상(ZOOM) 소통 선호",
+
+                // 돌발 질문
+                objections: [
+                    "한 달 만에 구독자 1만 명 찍었는데도 유료 결제 전환이 0건이에요. 트레이너님 설득 구조 시트가 개발자 타겟층에도 맞는 게 맞나요?",
+                    "AI가 대신 코딩해 주는 시대에 유료 강의를 50만 원이나 주고 살 이유를 고객한테 어떻게 증명하죠?"
+                ]
+            }
         ];
 
         // 🌐 Supabase 12기 Vercel 커뮤니티 라이브 DB 연동 설정
@@ -931,6 +1184,14 @@
                 timerInterval = setInterval(() => {
                     elapsedTime++;
                     updateTimerDisplay();
+
+                    // ⏱️ 20분(1200초) 시뮬레이션 최대 제한 시간 자동 종료
+                    if (elapsedTime >= 1200) {
+                        stopSimulation();
+                        speakText("시뮬레이션 제한 시간 20분이 종료되었습니다. 수고하셨습니다!");
+                        alert("⏰ 시뮬레이션 제한 시간 20분이 종료되었습니다!\n자동으로 녹음이 종료되고 다운로드 가능한 상태로 전환됩니다.");
+                        return;
+                    }
 
                     const objectionMode = document.getElementById('objectionModeSelect').value;
 
@@ -1150,6 +1411,26 @@
         }
 
         // 선택된 과제 기반 화면 세팅 헬퍼 함수
+        // 탭 switching 함수
+        let currentPersonaTab = 1;
+        function switchPersonaTab(tabNum) {
+            currentPersonaTab = tabNum;
+            for (let i = 1; i <= 4; i++) {
+                const btn = document.getElementById(`pTab${i}`);
+                const content = document.getElementById(`pTabContent${i}`);
+                if (btn && content) {
+                    if (i === tabNum) {
+                        btn.className = "px-3 py-1 rounded-lg transition bg-amber-500 text-black font-black shadow-md";
+                        content.classList.remove('hidden');
+                    } else {
+                        btn.className = "px-3 py-1 rounded-lg transition text-gray-300 hover:text-white hover:bg-white/10";
+                        content.classList.add('hidden');
+                    }
+                }
+            }
+        }
+
+        // 선택된 과제 기반 화면 세팅 헬퍼 함수
         function setSimulationTask(taskObj) {
             currentTask = taskObj;
 
@@ -1158,10 +1439,16 @@
 
             let selectedObjection = "";
             if (isLiveSynced && liveObjectionsMap[weekDigits] && liveObjectionsMap[weekDigits].length > 0) {
+                // 1순위: 커뮤니티 Supabase 동기화 돌발질문 우선
                 const liveList = liveObjectionsMap[weekDigits];
                 selectedObjection = liveList[Math.floor(Math.random() * liveList.length)];
-            } else {
+            } else if (typeof selectedPersona === 'object' && selectedPersona.objections && selectedPersona.objections.length > 0) {
+                // 2순위: 뽑힌 6개 실전 페르소나의 맞춤 돌발질문 표출
+                selectedObjection = selectedPersona.objections[Math.floor(Math.random() * selectedPersona.objections.length)];
+            } else if (currentTask.objections && currentTask.objections.length > 0) {
                 selectedObjection = currentTask.objections[Math.floor(Math.random() * currentTask.objections.length)];
+            } else {
+                selectedObjection = "온라인 수강 혹은 일정 조율 관련 돌발 질문이 입력되었습니다.";
             }
 
             document.getElementById('weekBadge').innerText = currentTask.week;
@@ -1170,16 +1457,40 @@
             document.getElementById('objectionDesc').innerText = `"${selectedObjection}"`;
             document.getElementById('modalObjectionText').innerText = `"${selectedObjection}"`;
 
-            // 페르소나 문장 분할 파싱 (직업/프로필, 목표/아이템, 고민/장벽)
-            const parts = selectedPersona.split('.').map(p => p.trim()).filter(p => p.length > 0);
-            
-            const profileText = parts[0] || selectedPersona;
-            const goalText = parts[1] || "특정 수익화 목표 설정 필요";
-            const painText = parts.slice(2).join('. ') || "상세 상담 및 가이드 필요";
+            // 30여개 전체 설문 항목 100% 탭 데이터 바인딩
+            if (typeof selectedPersona === 'object' && selectedPersona !== null) {
+                const badge = document.getElementById('personaCategoryBadge');
+                if (badge) badge.innerText = selectedPersona.caseName || "실전 페르소나";
 
-            document.getElementById('personaProfileText').innerText = profileText;
-            document.getElementById('personaGoalText').innerText = goalText;
-            document.getElementById('personaPainText').innerText = painText;
+                // 탭 1: 프로필 & 환경
+                document.getElementById('p1_job').innerText = `${selectedPersona.gender || ''} ${selectedPersona.job || ''}`;
+                document.getElementById('p1_edu').innerText = `${selectedPersona.prevJob ? '전직: ' + selectedPersona.prevJob : ''} (${selectedPersona.job || ''})`;
+                document.getElementById('p1_dual').innerText = selectedPersona.dualJob || "없음";
+                document.getElementById('p1_face').innerText = selectedPersona.faceNo || "가능";
+
+                // 탭 2: 목표 & 아이템
+                document.getElementById('p2_revenue').innerText = `${selectedPersona.targetRevenue || '-'} / ${selectedPersona.targetTime || '-'}`;
+                document.getElementById('p2_item').innerText = selectedPersona.wishItem || selectedPersona.sellingItem || "-";
+                document.getElementById('p2_reason').innerText = selectedPersona.itemReason || "-";
+
+                // 탭 3: 유튜브 & 라이프스타일
+                const ytContainer = document.getElementById('p3_youtube');
+                if (ytContainer && Array.isArray(selectedPersona.youtubeChannels)) {
+                    ytContainer.innerHTML = selectedPersona.youtubeChannels.map((ch, i) => 
+                        `<div class="flex items-start gap-1"><span class="text-amber-400 font-bold font-mono">${i+1}.</span> <span>${ch}</span></div>`
+                    ).join('');
+                }
+                document.getElementById('p3_hobby').innerText = `시간: ${selectedPersona.hobbyTime || '없음'} / 돈: ${selectedPersona.hobbyMoney || '없음'}`;
+                document.getElementById('p3_exp').innerText = `판매: ${selectedPersona.sellExp || '없음'} / 모임: ${selectedPersona.meetExp || '없음'} / 구매: ${selectedPersona.buyExp || '없음'}`;
+
+                // 탭 4: 동기부여 & 소통 성향
+                document.getElementById('p4_motive').innerText = selectedPersona.motive || "-";
+                document.getElementById('p4_achieve').innerText = selectedPersona.achievement || "-";
+                document.getElementById('p4_comm').innerText = selectedPersona.communication || "-";
+            }
+
+            // 첫번째 탭으로 리셋
+            switchPersonaTab(1);
 
             // 선택한 돌발질문 모드 파악 (popup, both, card, off)
             updateObjectionBoxVisibility();
@@ -1326,7 +1637,7 @@
         // 주차별 과제 옵션 생성
         function populateTaskDropdowns() {
             const allTasks = [...mandatoryTasks, ...randomTasks];
-            const weekIds = ['0', '1', '2', '3', '4'];
+            const weekIds = ['0', '1', '2', '3'];
             
             weekIds.forEach(w => {
                 const select = document.getElementById(`selectWeek${w}Tasks`);
