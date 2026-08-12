@@ -156,17 +156,17 @@
         <div class="glass-card bg-neutral-900 border border-amber-500/30 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl text-left space-y-4 max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center border-b border-white/10 pb-3 shrink-0">
                 <div class="flex items-center gap-2">
-                    <span class="bg-amber-500/20 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded border border-amber-500/30">v1.5 NEW</span>
+                    <span class="bg-amber-500/20 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded border border-amber-500/30">v1.6 NEW</span>
                     <h3 class="text-base font-bold text-white flex items-center gap-1.5">✨ 최신 업데이트 소식</h3>
                 </div>
                 <button onclick="toggleWhatsNewModal()" class="text-gray-400 hover:text-white text-lg font-bold">✕</button>
             </div>
 
             <div class="space-y-3 overflow-y-auto pr-1 flex-1 text-xs leading-relaxed text-gray-300">
-                <!-- 오늘 최신 업데이트 (v1.5) -->
+                <!-- 오늘 최신 업데이트 (v1.6) -->
                 <div class="bg-amber-500/10 rounded-xl p-3 border border-amber-500/30 space-y-1">
-                    <div class="font-extrabold text-amber-300 flex items-center gap-1">🛍️ 3주차 [내 키콘텐츠 기획] 케이스별 지정 상품 연동 (v1.5)</div>
-                    <p class="text-gray-300 text-[11px]">3주차 과제 진행 시 각 수강생 케이스별 지정 희망 상품/서비스(러닝벨트, 올리브오일, 밀폐용기, 전동드릴, 커피머신, 바이브코딩)가 💰2번 탭에 자동 매칭됩니다.</p>
+                    <div class="font-extrabold text-amber-300 flex items-center gap-1">🧹 4주차 과제 및 관련 문구 완전히 제거 (v1.6)</div>
+                    <p class="text-gray-300 text-[11px]">실전 시험 범위(0~3주차)에 맞춰 과제 목록 및 페르소나 데이터에 남아있던 모든 4주차 관련 항목을 깔끔하게 제거했습니다.</p>
                 </div>
 
                 <div class="bg-emerald-500/10 rounded-xl p-3 border border-emerald-500/30 space-y-1">
@@ -758,32 +758,6 @@
                     "트레이너님이 썸네일 그냥 골라주시면 안 되나요?",
                     "썸끝 원끝을 왜 이렇게까지 열심히 해야 하는지 모르겠어요."
                 ]
-            },
-
-            // --- 4주차 ---
-            { 
-                week: "4주차", 
-                title: "1. 풀링 예시 영상 보여주기",
-                objections: [
-                    "다른 예시 영상 더 볼 수 있는 거 없나요?",
-                    "편집이 너무 어려운데 편집도 트레이너님이 다 가르쳐주나요?"
-                ]
-            },
-            { 
-                week: "4주차", 
-                title: "2. 풀링 콘텐츠 썸네일 찾기",
-                objections: [
-                    "지금이라도 아이템 바꾸고 싶은데 괜찮을까요?",
-                    "해당 주제로 대중의 어그로를 끌 자신이 없어요."
-                ]
-            },
-            { 
-                week: "4주차", 
-                title: "3. 채널 주제 정하기",
-                objections: [
-                    "채널 주제를 하나로 고정하면 아이디어가 고갈될 것 같아요.",
-                    "이미 20만 유튜버인데 채널 주제를 새로 잡아야 하나요?"
-                ]
             }
         ];
 
@@ -875,7 +849,7 @@
                 itemReason: "주부라 잘하는 걸 몰라서 무엇을 팔아야 할지 고민이지만 주방/건강 분야 도전 희망",
                 itemPool: [
                     "30분 완성 반찬 밀키트",
-                    "주부 감정 코칭 4주 클래스",
+                    "주부 감정 코칭 클래스",
                     "무독성 친환경 주방용품 세트",
                     "경단녀 방과후 중국어 VOD",
                     "어린이 면역 음료 큐레이션",
@@ -1141,7 +1115,7 @@
                     "AI 활용 노코드 앱 제작 강의",
                     "AI 외주 제작 1:1 멘토링",
                     "Claude Code 자동화 워크숍",
-                    "AI 포트폴리오 4주 부트캠프",
+                    "AI 포트폴리오 부트캠프",
                     "B2B 고객관리 자동화 대행",
                     "프롬프트 앱 개발 템플릿",
                     "개발자 실전 리팩토링 코칭",
@@ -1739,7 +1713,7 @@
         }
 
         // ✨ What's New 업데이트 공지 모달 토글
-        const LATEST_VERSION = "v1.5";
+        const LATEST_VERSION = "v1.6";
 
         function toggleWhatsNewModal() {
             const modal = document.getElementById('whatsNewModal');
